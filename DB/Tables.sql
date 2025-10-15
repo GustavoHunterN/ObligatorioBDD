@@ -48,11 +48,10 @@ CREATE TABLE participante_programa(
 );
 
 
-
 CREATE TABLE edificio(
     direccion VARCHAR(30),
     departamento VARCHAR(10),
-    nombre_edif VARCHAR(15) NOT NULL
+    nombre_edif VARCHAR(15) NOT NULL UNIQUE
 );
 
 CREATE TABLE turnos(

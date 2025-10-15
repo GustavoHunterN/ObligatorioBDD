@@ -25,4 +25,13 @@ Para mantentener un encapsulamiento adecuado.
 Se teoriza que será necesario implementar esta práctica en algunas sino todas las relaciones de composicion. 
 Se verá mas adelante. 
 
+
+
 ### Clases 
+
+Se hace primero las clases sin metodos, 
+una vez se comience con el main se verá los metodos
+a implementar
+
+Se confirmó con un script que las repr y str están bien implementadas. 
+
