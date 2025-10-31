@@ -1,4 +1,3 @@
-# Faltan Repr o Str
 
 class Edificio:
     def __init__(self, direccion, departamento):

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ObligatorioBDD.iml" filepath="$PROJECT_DIR$/.idea/ObligatorioBDD.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SteamAPI-trough-Python/.idea/SteamAPI-trough-Python.iml" filepath="$PROJECT_DIR$/../SteamAPI-trough-Python/.idea/SteamAPI-trough-Python.iml" />
     </modules>
   </component>
 </project>

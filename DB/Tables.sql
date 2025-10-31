@@ -1,4 +1,4 @@
-USE OBL;
+shUSE OBL;
 
 CREATE TABLE login(
     correo VARCHAR(255) NOT NULL UNIQUE,
