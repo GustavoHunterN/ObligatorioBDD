@@ -1,4 +1,4 @@
-shUSE OBL;
+USE OBL;
 
 CREATE TABLE login(
     correo VARCHAR(255) NOT NULL UNIQUE,
@@ -39,7 +39,7 @@ CREATE TABLE programa_academico(
 
 
 CREATE TABLE participante_programa(
-    id_part_prog INT PRIMARY KEY AUTO_INCREMENT,
+    id_part_prog VARCHAR(15) PRIMARY KEY,
     rol VARCHAR(20) NOT NULL,
     nombre_programa VARCHAR(50),
     ci VARCHAR(8) NOT NULL UNIQUE,
@@ -55,7 +55,7 @@ CREATE TABLE edificio(
 );
 
 CREATE TABLE turnos(
-    id_turno INT PRIMARY KEY AUTO_INCREMENT,
+    id_turno VARCHAR(20) PRIMARY KEY,
     hora_inicio TIME,
     hora_final TIME
 );
@@ -68,7 +68,7 @@ CREATE TABLE sala(
     FOREIGN KEY (edificio) REFERENCES edificio(nombre_edif)
 );
 CREATE TABLE reserva(
-    id_reserva INT PRIMARY KEY AUTO_INCREMENT,
+    id_reserva VARCHAR(20) PRIMARY KEY ,
     fecha DATETIME,
     estado VARCHAR(14) NOT NULL,
     id_turno INT NOT NULL,
@@ -87,3 +87,6 @@ CREATE TABLE reserva_participante (
     FOREIGN KEY (id_reserva) REFERENCES reserva(id_reserva),
     FOREIGN KEY (ci) REFERENCES participante(ci)
 );
+
+DROP DATABASE OBL;
+CREATE DATABASE OBL;

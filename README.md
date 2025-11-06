@@ -7,8 +7,8 @@ Primary Key con Mayúsculas y cada Foreign Key con una
 flecha desde el atributo hacia la entidad. 
 
 ### Database
-Las ID de algunas entidades como Facultad y Reserva iban a tener que ser reformuladas e introducidas 
-desde BackEnd. Para hacerlas mas legibles con un str o repr. Pensando en manutención del codigo y 
+Las ID de algunas entidades como Facultad y Reserva van a tener que ser reformuladas e introducidas 
+desde BackEnd. Para hacerlas más legibles con un str o repr. Pensando en manutención del codigo y 
 optimizar el tiempo al desarrollarlo. 
 
 
@@ -35,3 +35,6 @@ a implementar
 
 Se confirmó con un script que las repr y str están bien implementadas. 
 
+
+### to do 
+hacer usuario y permisos en la base de datos. 
