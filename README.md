@@ -1,66 +1,108 @@
-### Diagrama ER 
+# 📘 Obligatorio BDD — Backend & Data Integration
 
-Para comenzar se diseñó un diagrama con las 
-estructuras sugeridas en la letra.  
-Denotando cada Entidad con un Rectángulo Naranja. Cada
-Primary Key con Mayúsculas y cada Foreign Key con una 
-flecha desde el atributo hacia la entidad. 
+## 📊 Diagrama ER 
+Se diseñó un diagrama basado en las estructuras sugeridas en la letra del enunciado.  
+Cada entidad se representa con un **rectángulo naranja**,  
+las **Primary Keys** en **mayúsculas**, y las **Foreign Keys** con flechas desde el atributo hacia la entidad de referencia.  
 
-### Database
-Las ID de algunas entidades como Facultad y Reserva van a tener que ser reformuladas e introducidas 
-desde BackEnd. Para hacerlas más legibles con un str o repr. Pensando en manutención del codigo y 
-optimizar el tiempo al desarrollarlo. 
+El diseño prioriza la claridad visual y la trazabilidad de relaciones para facilitar la implementación posterior en el backend.
 
+---
 
+## 🧩 Database
+Algunas entidades (como **Facultad** y **Reserva**) requieren que sus IDs sean generadas desde el backend.  
+Esto permite crear claves más legibles y manejables mediante los métodos `__str__` y `__repr__`,  
+manteniendo el código más sustentable y eficiente a largo plazo.  
 
-### Diagrama UML
-Se diseñó el diagrama UML con las clases que satisfacen las necesidades  
-del DataBase. 
+La estructura final de la base incluye control de claves foráneas, relaciones jerárquicas y restricciones de dominio.  
+El esquema completo fue ajustado para garantizar compatibilidad con el backend Python y MySQL.  
 
-### ˜
-Se planea que las contraseñas sean encriptadas y no texto plano. 
+---
 
-Se decidió que la clase sancion sea creada desde un metodo adentro de participante. 
-Para mantentener un encapsulamiento adecuado.  
-Se teoriza que será necesario implementar esta práctica en algunas sino todas las relaciones de composicion. 
-Se verá mas adelante. 
+## 🧠 Diagrama UML
+El diagrama UML fue diseñado en base a las clases que reflejan el modelo relacional.  
+Cada clase mantiene una relación directa con su tabla equivalente en la base,  
+respetando composición, herencia y dependencia entre entidades.  
 
+Se priorizó la legibilidad del flujo jerárquico de objetos y la consistencia entre atributos de clase y columnas SQL.
 
+---
 
-### Clases 
+## 🔐 Seguridad
+Las contraseñas de los usuarios serán almacenadas de forma **encriptada** (no en texto plano).  
+La clase `Sancion` se instancia desde un método interno dentro de `Participante`,  
+siguiendo principios de **encapsulamiento y responsabilidad única**.  
 
-Se hace primero las clases sin metodos, 
-una vez se comience con el main se verá los metodos
-a implementar
+Se prevé aplicar el mismo enfoque en otras relaciones de composición para mantener cohesión y control de lógica de negocio.  
 
-Se confirmó con un script que las repr y str están bien implementadas. 
+---
 
+## 🧱 Clases
+Las clases fueron desarrolladas para reflejar la estructura de la base de datos y optimizar la interacción con ella.  
+Inicialmente se diseñaron sin métodos, para luego integrarse con el backend a través del archivo `main.py`.  
 
-### 06/11
+Cada clase incluye:
+- Atributos que reflejan los campos de la tabla correspondiente.
+- Métodos `save()` que insertan registros directamente en MySQL mediante la clase `Conexion`.
+- Relaciones entre objetos que respetan las Foreign Keys (por ejemplo, `Sala` depende de `Edificio`, `Reserva` depende de `Turnos`, etc.).
 
-Se hicieron control.py y BE.py 
+La lógica de inserción en cascada permite construir jerarquías completas desde el backend sin depender de autoincrementos externos.
 
-control.py conteniendo diccionarios utiles para
-las funcionalidades. 
-Como un contador de instancias para crear las keys
-(Sala en edicio Mullin: M001).  
-Esto con el fin de controlar Las Keys desde BE. 
+---
 
-También uno de tipos de datos. Con su clase, el atributo y el dominio de este. 
+## ⚙️ 06/11 — Implementación de Control y Backend Inicial
 
-Se reformó el DB para Insertar keys desde backend para que sean unicas.  
-Al ser FK's no pueden ser un AUTOINCREMENT simple. 
+Se crearon los módulos `control.py` y `BE.py`.
 
+### `control.py`
+Contiene los diccionarios de apoyo:
+- **`dtypes`**: define los tipos de datos y dominios válidos por clase y atributo.
+- **`n_of_instances`**: controla las instancias por entidad y permite generar claves personalizadas (por ejemplo, *Sala en edificio Mullin → M001*).
 
+Esto permite mantener control lógico desde el backend y asegurar unicidad de claves sin depender del autoincremento.
 
+### `BE.py`
+Centraliza la ejecución y validación de inserciones, además de integrar los controladores con la base de datos.  
 
-### to do 
+El esquema SQL fue reformado para aceptar claves controladas desde Python, manteniendo consistencia en las relaciones.
 
-- Falta ID programa en Clases y DB
+---
 
-- Faltan métodos "idmaker"  
- ej { Sala : {Edificio.nombre : }} entonces {inicial_edificio} + "sal"+ {cantidad_de_instancias}
-- Hacer usuario y permisos en la base de datos. 
+## ⚙️ 07/11 — Integración Clases ↔ Base de Datos
+
+Se completó la integración total entre el modelo orientado a objetos y la base relacional, logrando:
+- Simetría entre nombres de atributos y columnas.
+- Consistencia entre tipos de datos y claves foráneas.
+
+### Backend
+Se implementaron los métodos `save()` en todas las clases,  
+permitiendo interacción directa con MySQL mediante `Conexion`.  
+Cada inserción ejecuta un `commit` automático y retorna, cuando corresponde, el `lastrowid` asignado.
+
+El flujo jerárquico de creación de entidades quedó definido de la siguiente forma:
+- `Edificio` → `Sala` → `Turnos` → `Reserva`
+- `Participante` → `ReservaParticipante`
+- `Facultad` → `Programa` → `ParticipantePrograma`
+
+### `main.py`
+Se agregó un flujo de prueba completo que permite crear y relacionar objetos en orden lógico,  
+validando la integridad de las Foreign Keys y la consistencia del modelo.
+
+### `control.py`
+Sigue administrando los tipos y contadores de instancias (`dtypes`, `n_of_instances`),  
+permitiendo la futura automatización de IDs con prefijos específicos (ej. `M001` para las salas del edificio *Mullin*).
+
+---
+
+## 📋 To Do (actualizado)
+
+- Implementar método `idmaker` para generación automática de IDs por entidad.  
+- Crear usuarios y permisos específicos en MySQL para aislar roles **Admin / User**.  
+- Añadir métodos `fetch()` con condiciones en cada clase (consultas dinámicas desde backend).  
+- Desarrollar endpoints CRUD mediante Flask para exponer el backend como API REST.  
+- Integrar encriptación de contraseñas (bcrypt o hashlib).  
+
+---
 
 
 ## FRONT 
