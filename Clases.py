@@ -1,6 +1,7 @@
 
 class Edificio:
-    def __init__(self, direccion, departamento):
+    def __init__(self,nombre, direccion, departamento):
+        self.nombre = nombre
         self.direccion = direccion
         self.departamento = departamento
 
@@ -12,8 +13,8 @@ class Edificio:
 
 
 class Sala:
-    def __init__(self, nombre, capacidad, edificio, tipo):
-        self.nombre = nombre
+    def __init__(self, capacidad, edificio, tipo):
+
         self.capacidad = capacidad
         self.edificio = edificio
         self.tipo = tipo
@@ -28,6 +29,9 @@ class Sala:
     def validar_edificio(self):
         if not isinstance(self.edificio, Edificio):
             raise TypeError("El edificio debe ser de tipo Edificio")
+
+    def set_nombre(self, num):
+        self.nombre = str(self.edificio.nombre[0].upper() + "0" + num)
 
 
 class Turnos:
@@ -131,6 +135,7 @@ class Facultad:
 
     def __repr__(self):
         return f"Facultad(id={self.id!r}, nombre={self.nombre!r})"
+
 
 
 class Programa:
