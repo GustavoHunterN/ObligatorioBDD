@@ -14,33 +14,44 @@ n_of_instances = {"Facultad" : 0,
 }
 
 dtypes = {"Facultad" :
-                        {"Nombre": str}
+                        {"nombre": str,
+                         "facultad": object,
+                         }
           ,
 
 
           "Programa" :
-                        {"Nombre": str,
+                        {"nombre": str,
                         "Tipo": ["Grado",
-                                 "Posgrado"]
-
+                                 "Posgrado"],
+                         "id_facultad": str,
                          }
           ,
 
 
           "Participante" :
-                        {"Nombre": str}
+                        {"nombre": str,
+                         "ci": str,
+                         "apellido": str,
+                         "correo": str,
+                         "contrasena": str
+                         }
           ,
 
 
-          "Participante_programa" :
-                        {"Rol": ["Alumno",
+          "ParticipantePrograma" :
+                        {"programa": object,
+                         "participante": object,
+                        "rol": ["Alumno",
                                  "Docente"],
                          }
           ,
 
 
           "Sala" :
-                        {"capacidad": int,
+                        {"nombre": str,
+                        "capacidad": int,
+                         "edificio" : object,
                          "tipo": ["Grado",
                                   "Posgrado",
                                   "Libre"]
@@ -50,15 +61,35 @@ dtypes = {"Facultad" :
 
 
           "Edificio" : {"direccion": str,
-                        "departamento": str},
+                        "departamento": str
+                        },
 
 
-          "Reserva" : {"Estado":["Activa",
+          "Reserva" : {"id":str,
+                       "edificio": object,
+                       "sala": object,
+                       "turno": object,
+                        "estado":["Activa",
                                  "Cancelada",
                                  "S/A",
-                                 "Finalizada"]
-                       }
+                                 "Finalizada"],
+                       "fecha": str
+                       },
+          "ReservaParticipante" : {"reserva" : object,
+                                   "participante": object,
+                                   "fecha_sol": str,
+                                   "asistencia": bool
 
+                                    },
+          "Sancion" : { "participante": object,
+                        "fecha_inicio": str,
+                        "fecha_fin": str
+                        },
+          "Turnos" : { "hora_inicio": str,
+                       "hora_final": str,
+                       "dia": str,
+                       "sala": object
+                       }
           }
 
 
@@ -116,5 +147,5 @@ def create_objeto(nombre_clase, *args):
 
 
 
-version no se queee
+
 
