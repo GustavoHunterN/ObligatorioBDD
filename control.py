@@ -22,6 +22,7 @@ dtypes = {"Facultad" :
                         {"Nombre": str,
                         "Tipo": ["Grado",
                                  "Posgrado"]
+
                          }
           ,
 
@@ -33,7 +34,7 @@ dtypes = {"Facultad" :
 
           "Participante_programa" :
                         {"Rol": ["Alumno",
-                                 "Docente"]
+                                 "Docente"],
                          }
           ,
 

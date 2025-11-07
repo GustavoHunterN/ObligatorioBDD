@@ -61,3 +61,41 @@ Al ser FK's no pueden ser un AUTOINCREMENT simple.
 - Faltan métodos "idmaker"  
  ej { Sala : {Edificio.nombre : }} entonces {inicial_edificio} + "sal"+ {cantidad_de_instancias}
 - Hacer usuario y permisos en la base de datos. 
+
+
+## FRONT 
+Las clases de clases.jpg que tienen atributo:[tipo de dato], tienen un dominio limitado.
+Deberían ser un desplegable.  
+Para buscar que mostrar en el desplegable buscar en el diccionario llamado dtypes de control.py 
+
+EJ :  
+Si se esta haciendo el formulario de Sala:  
+import control   
+desplegable = control.dtypes["Sala"]["tipo"]  
+Obtendrá una lista con los datos a elegir. 
+
+
+
+
+  Formularios. 
+
+- Registro Usuario 
+
+ - Login Usuario 
+
+- Registro Edificios(añadir número de Salas Total)
+
+- Registro de Programas. 
+
+- Registro de Facultades.
+
+
+Pages: 
+
+Home Page para Admin 
+- Una barra lateral que una pestaña pueda acceder a registrar edificios, Facultades, Reservas y participantes. 
+- Otra pestaña para acceder a editar los ya existentes de cada entidad. (devuelve una tabla editable).
+
+Home Page para User 
+- Una barra lateral que una pestaña sea tan solo de registro de Reservas (elige un dia en el calendario y una sala, devuelve una tabla de horarios, y puede poner el check en el horario elegido)
+- Una pestaña de reservas activas. Devuelve una tabla con las reservas activas, teniendo un botón para ver las reservas antiguas también. 
