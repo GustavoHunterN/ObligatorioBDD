@@ -87,8 +87,6 @@ dtypes = {"Facultad" :
                         },
           "Turnos" : { "hora_inicio": str,
                        "hora_final": str,
-                       "dia": str,
-                       "sala": object
                        }
           }
 
@@ -139,11 +137,49 @@ def create_objeto(nombre_clase, *args):
     # Si args tiene un solo elemento y ese elemento es una lista o tupla → desempacamos
     if len(args) == 1 and isinstance(args[0], (list, tuple)):
         args = args[0]
-    objeto = clase(*args)
 
-    if check_dtypes(objeto, dtypes):
+    objeto = clase(*args)
+    validacion = check_dtypes(objeto, dtypes)
+
+    if validacion:
         return objeto
-    return check_dtypes(objeto, dtypes)
+    else:
+        print(f"Error de tipo en {nombre_clase}: {validacion}")
+        return None
+
+
+
+
+def turnos_disponibles(fecha, conexion):
+    """
+    Retorna un diccionario donde:
+    - si el turno tiene reserva activa ese día → "no_elegible"
+    - si no tiene reserva → "elegible"
+    """
+
+    # 1. Obtener turnos fijos
+    conexion.cursor.execute("SELECT id_turno FROM turnos")
+    turnos = conexion.cursor.fetchall()
+
+    # Diccionario base
+    resultado = {t["id_turno"]: "elegible" for t in turnos}
+
+    # 2. Obtener turnos reservados en esa fecha
+    query = """
+        SELECT id_turno 
+        FROM reservas 
+        WHERE fecha = %s AND estado = 'Activa'
+    """
+    conexion.cursor.execute(query, (fecha,))
+    ocupados = conexion.cursor.fetchall()
+
+    # 3. Marcar como NO elegibles
+    for oc in ocupados:
+        idt = oc["id_turno"]
+        if idt in resultado:
+            resultado[idt] = "no_elegible"
+
+    return resultado
 
 
 

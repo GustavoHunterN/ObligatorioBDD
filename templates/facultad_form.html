@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Registrar Facultad</title></head>
+<body>
+  <h1>Nueva Facultad</h1>
+
+  <form method="post" action="{{ url_for('object_creator') }}">
+    <input type="hidden" name="class_name" value="Facultad">
+
+    <label>Dirección:
+      <input type="text" name="direccion" required>
+    </label><br>
+
+    <label>Departamento:
+      <input type="text" name="departamento" required>
+    </label><br>
+
+    <button type="submit">Registrar</button>
+  </form>
+
+  <a href="{{ url_for('index') }}">Volver</a>
+</body>
+</html>

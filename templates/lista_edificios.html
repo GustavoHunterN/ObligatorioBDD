@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Edificios</title>
+</head>
+<body>
+
+<h1>Listado de Edificios</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Nombre</th>
+        <th>Dirección</th>
+        <th>Departamento</th>
+    </tr>
+
+    {% for edificio in edificios %}
+    <tr>
+        <td>{{ edificio.nombre_edificio }}</td>
+        <td>{{ edificio.direccion }}</td>
+        <td>{{ edificio.departamento }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
+

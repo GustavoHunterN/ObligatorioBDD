@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Reserva</title>
+</head>
+<body>
+
+<h1>Crear reserva — Fecha {{ fecha }}</h1>
+
+<!-- FORMULARIO DE FILTROS -->
+<form method="GET" action="/reserva/crear">
+
+    <label>Fecha:
+        <input type="date" name="fecha" value="{{ fecha }}">
+    </label>
+
+    <label>Edificio:
+        <select name="edificio">
+            <option value="">Todos</option>
+            {% for e in edificios %}
+                <option value="{{ e.nombre_edificio }}"
+                   {% if filtro_edificio == e.nombre_edificio %}selected{% endif %}>
+                   {{ e.nombre_edificio }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <label>Turno:
+        <select name="id_turno">
+            <option value="">Todos</option>
+            {% for t in todos_los_turnos %}
+                <option value="{{ t.id_turno }}"
+                   {% if filtro_turno == t.id_turno|string %}selected{% endif %}>
+
+                    {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
+                    {{ "%02d"|format((t.hora_inicio.seconds % 3600)//60) }}
+                    -
+                    {{ "%02d"|format(t.hora_final.seconds//3600) }}:
+                    {{ "%02d"|format((t.hora_final.seconds % 3600)//60) }}
+
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <button type="submit">Aplicar filtros</button>
+</form>
+
+
+<hr>
+
+<h2>Edificios / Salas / Turnos</h2>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Edificio</th>
+        <th>Sala</th>
+        <th>Turno</th>
+        <th>Estado</th>
+        <th>Acción</th>
+    </tr>
+
+    {% for s in salas %}
+        {% for t in turnos %}
+            <tr>
+                <td>{{ s.edificio }}</td>
+                <td>{{ s.nombre_sala }}</td>
+
+                <td>
+                  {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
+                  {{ "%02d"|format((t.hora_inicio.seconds % 3600)//60) }}
+                  -
+                  {{ "%02d"|format(t.hora_final.seconds//3600) }}:
+                  {{ "%02d"|format((t.hora_final.seconds % 3600)//60) }}
+                </td>
+
+                {% set ocupado = (t.id_turno, s.nombre_sala, s.edificio) in reservados %}
+
+                <td>
+                    {% if ocupado %}
+                        <b style="color:red;">Reservado</b>
+                    {% else %}
+                        <b style="color:green;">Disponible</b>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if not ocupado %}
+                    <form method="POST" action="/reserva/guardar">
+                        <input type="hidden" name="fecha" value="{{ fecha }}">
+                        <input type="hidden" name="nombre_sala" value="{{ s.nombre_sala }}">
+                        <input type="hidden" name="nombre_edificio" value="{{ s.edificio }}">
+                        <input type="hidden" name="id_turno" value="{{ t.id_turno }}">
+                        <button type="submit">Reservar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

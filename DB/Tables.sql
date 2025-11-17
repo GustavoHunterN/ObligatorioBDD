@@ -66,10 +66,7 @@ CREATE TABLE sala(
 CREATE TABLE turnos(
     id_turno INT PRIMARY KEY AUTO_INCREMENT,
     hora_inicio TIME,
-    hora_final TIME,
-    dia DATE,
-    nombre_sala VARCHAR(5),
-    FOREIGN KEY (nombre_sala) REFERENCES sala(nombre_sala)
+    hora_final TIME
 );
 
 
@@ -96,4 +93,35 @@ CREATE TABLE reserva_participante (
     FOREIGN KEY (id_reserva) REFERENCES reserva(id_reserva),
     FOREIGN KEY (ci) REFERENCES participante(ci)
 );
+
+INSERT INTO turnos (hora_inicio, hora_final) VALUES
+('08:00:00', '09:00:00'),
+('09:00:00', '10:00:00'),
+('10:00:00', '11:00:00'),
+('11:00:00', '12:00:00'),
+('12:00:00', '13:00:00'),
+('13:00:00', '14:00:00'),
+('14:00:00', '15:00:00'),
+('15:00:00', '16:00:00'),
+('16:00:00', '17:00:00'),
+('17:00:00', '18:00:00'),
+('18:00:00', '19:00:00'),
+('19:00:00', '20:00:00'),
+('20:00:00', '21:00:00'),
+('21:00:00', '22:00:00');
+
+
+
+DESCRIBE edificio;
+DESCRIBE sala;
+DESCRIBE turnos;
+DESCRIBE reserva;
+
+
+SELECT * FROM sala
+
+SELECT * FROM reserva
+
+
+describe reserva
 

@@ -1158,7 +1158,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <column id="322" parent="301" name="ci">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <StoredType>varchar(8)|0s</StoredType>
+      <StoredType>varchar(9)|0s</StoredType>
     </column>
     <column id="323" parent="301" name="nombre">
       <NotNull>1</NotNull>
@@ -1200,7 +1200,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <UnderlyingIndexName>correo</UnderlyingIndexName>
     </key>
     <column id="331" parent="302" name="id_part_prog">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1215,9 +1215,8 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <StoredType>varchar(20)|0s</StoredType>
     </column>
     <column id="334" parent="302" name="ci">
-      <NotNull>1</NotNull>
       <Position>4</Position>
-      <StoredType>varchar(8)|0s</StoredType>
+      <StoredType>varchar(9)|0s</StoredType>
     </column>
     <foreign-key id="335" parent="302" name="participante_programa_ibfk_1">
       <ColNames>nombre_programa</ColNames>
@@ -1354,15 +1353,14 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="362" parent="305" name="id_reserva_part">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="363" parent="305" name="ci">
-      <NotNull>1</NotNull>
       <Position>2</Position>
-      <StoredType>varchar(8)|0s</StoredType>
+      <StoredType>varchar(9)|0s</StoredType>
     </column>
     <column id="364" parent="305" name="id_reserva">
       <NotNull>1</NotNull>
@@ -1453,9 +1451,8 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="382" parent="307" name="ci">
-      <NotNull>1</NotNull>
       <Position>2</Position>
-      <StoredType>varchar(8)|0s</StoredType>
+      <StoredType>varchar(9)|0s</StoredType>
     </column>
     <column id="383" parent="307" name="fecha_inicio">
       <NotNull>1</NotNull>
@@ -1487,7 +1484,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="389" parent="308" name="id_turno">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1500,30 +1497,12 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>3</Position>
       <StoredType>time|0s</StoredType>
     </column>
-    <column id="392" parent="308" name="dia">
-      <Position>4</Position>
-      <StoredType>date|0s</StoredType>
-    </column>
-    <column id="393" parent="308" name="nombre_sala">
-      <Position>5</Position>
-      <StoredType>varchar(5)|0s</StoredType>
-    </column>
-    <foreign-key id="394" parent="308" name="turnos_ibfk_1">
-      <ColNames>nombre_sala</ColNames>
-      <RefColNames>nombre_sala</RefColNames>
-      <RefTableName>sala</RefTableName>
-      <RefTableParentName>obl</RefTableParentName>
-    </foreign-key>
-    <index id="395" parent="308" name="PRIMARY">
+    <index id="392" parent="308" name="PRIMARY">
       <ColNames>id_turno</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="396" parent="308" name="nombre_sala">
-      <ColNames>nombre_sala</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="397" parent="308" name="PRIMARY">
+    <key id="393" parent="308" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>

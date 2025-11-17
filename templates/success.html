@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Creación exitosa</title></head>
+<body>
+  <h1>{{ mensaje }}</h1>
+  <h3>Datos registrados:</h3>
+  <ul>
+    {% for k, v in datos.items() %}
+      <li><b>{{ k }}:</b> {{ v }}</li>
+    {% endfor %}
+  </ul>
+  <a href="{{ url_for('index') }}">Volver al inicio</a>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Alumno</title>
+</head>
+<body>
+
+<h1>Login Alumno</h1>
+
+<!-- Mostrar mensajes flash -->
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+    <ul>
+      {% for cat, msg in msgs %}
+        <li>[{{ cat }}] {{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('login_alumno') }}" method="POST">
+    <label>Correo:</label><br>
+    <input type="email" name="correo" required><br><br>
+
+    <label>Contraseña:</label><br>
+    <input type="password" name="contrasena" required><br><br>
+
+    <button type="submit">Ingresar</button>
+</form>
+
+<p><a href="/">Volver al inicio</a></p>
+
+</body>
+</html>

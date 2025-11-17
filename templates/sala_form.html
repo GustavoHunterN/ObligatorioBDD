@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Sala</title>
+</head>
+<body>
+
+<h1>Crear Sala</h1>
+
+<form action="/ObjectCreator" method="POST">
+
+    <!-- Tipo de objeto -->
+    <input type="hidden" name="class_name" value="Sala">
+
+    <!-- Nombre sala -->
+    <label>Nombre de la sala:</label><br>
+    <input type="text" name="nombre" required><br><br>
+
+    <!-- Capacidad -->
+    <label>Capacidad:</label><br>
+    <input type="number" name="capacidad" min="1" required><br><br>
+
+    <!-- Tipo sala -->
+    <label>Tipo de sala:</label><br>
+    <select name="tipo_sala" required>
+        <option value="Alumnos">Alumnos</option>
+        <option value="Docentes">Docentes</option>
+        <option value="Libre">Libre</option>
+    </select>
+    <br><br>
+
+    <!-- Lista de edificios cargados desde Flask -->
+    <label>Edificio:</label><br>
+    <select name="edificio" required>
+        {% for ed in edificios %}
+            <option value="{{ ed['nombre_edificio']}}">
+                {{ ed['nombre_edificio'] }}
+            </option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <button type="submit">Crear Sala</button>
+
+</form>
+
+</body>
+</html>

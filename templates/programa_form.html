@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Registrar Programa</title></head>
+<body>
+  <h1>Nuevo Programa</h1>
+
+  <form method="post" action="{{ url_for('object_creator') }}">
+    <input type="hidden" name="class_name" value="Programa">
+
+    <label>Dirección (Nombre):
+      <input type="text" name="direccion" required>
+    </label><br>
+
+    <label>Departamento (Tipo):
+      <select name="departamento">
+        <option value="Grado">Grado</option>
+        <option value="Posgrado">Posgrado</option>
+      </select>
+    </label><br>
+
+    <button type="submit">Registrar</button>
+  </form>
+
+  <a href="{{ url_for('index') }}">Volver</a>
+</body>
+</html>
+
