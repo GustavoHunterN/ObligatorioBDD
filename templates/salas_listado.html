@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Salas</title>
+</head>
+<body>
+
+<h1>Gestión de Salas</h1>
+
+<form method="GET" action="/salas">
+    <label>Edificio:</label>
+    <select name="edificio">
+        <option value="">Todos</option>
+        {% for e in edificios %}
+            <option value="{{ e.nombre_edificio }}"
+                {% if filtro_edificio == e.nombre_edificio %}selected{% endif %}>
+                {{ e.nombre_edificio }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filtrar</button>
+</form>
+
+<hr>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Nombre sala</th>
+        <th>Capacidad</th>
+        <th>Tipo</th>
+        <th>Edificio</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for s in salas %}
+    <tr>
+        <td>{{ s.nombre_sala }}</td>
+        <td>{{ s.capacidad }}</td>
+        <td>{{ s.tipo_sala }}</td>
+        <td>{{ s.edificio }}</td>
+        <td>
+
+            <!-- BOTÓN EDITAR -->
+            <form action="/salas/editar/{{ s.nombre_sala }}" method="GET" style="display:inline;">
+                <button type="submit">Editar</button>
+            </form>
+
+            <!-- BOTÓN ELIMINAR -->
+            <form action="/salas/eliminar/{{ s.nombre_sala }}" method="POST" style="display:inline;"
+                  onsubmit="return confirm('¿Eliminar sala y TODAS sus reservas?');">
+                <button type="submit" style="color:red;">Eliminar</button>
+            </form>
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<p><a href="/">Volver al inicio</a></p>
+
+</body>
+</html>

@@ -2,12 +2,12 @@ USE OBL;
 -- LOGIN ----------------------------------------------------
 CREATE TABLE login(
     correo VARCHAR(255) NOT NULL UNIQUE,
-    contraseña VARCHAR (64) NOT NULL
+    contrasena VARCHAR (64) NOT NULL
 );
 
 -- PARTICIPANTE ---------------------------------------------
 CREATE TABLE participante (
-    ci VARCHAR(8) NOT NULL PRIMARY KEY,
+    ci VARCHAR(9) NOT NULL PRIMARY KEY,
     nombre VARCHAR(15) NOT NULL,
     apellido VARCHAR(15) NOT NULL,
     correo VARCHAR(30) NOT NULL UNIQUE,
@@ -17,7 +17,7 @@ CREATE TABLE participante (
 -- SANCION ---------------------------------------------------
 CREATE TABLE sancion_participante(
     id_sancion INT PRIMARY KEY AUTO_INCREMENT,
-    ci VARCHAR(8) NOT NULL,
+    ci VARCHAR(9) NOT NULL,
     fecha_inicio DATETIME NOT NULL,
     fecha_final DATETIME,
     FOREIGN KEY (ci) REFERENCES participante(ci)
@@ -25,24 +25,23 @@ CREATE TABLE sancion_participante(
 
 -- FACULTAD --------------------------------------------------
 CREATE TABLE facultad(
-    id_facultad VARCHAR(6) NOT NULL PRIMARY KEY,
-    nombre VARCHAR(15)
+    nombre VARCHAR(15) PRIMARY KEY UNIQUE
 );
 
 -- PROGRAMA --------------------------------------------------
 CREATE TABLE programa_academico(
-    nombre_programa VARCHAR(20) NOT NULL PRIMARY KEY,
-    id_facultad VARCHAR(6) NOT NULL,
+    nombre_programa VARCHAR(30) NOT NULL PRIMARY KEY,
+    nombre_facultad VARCHAR(30) NOT NULL,
     tipo VARCHAR(8),
-    FOREIGN KEY (id_facultad) REFERENCES facultad(id_facultad)
+    FOREIGN KEY (nombre_facultad) REFERENCES facultad(nombre)
 );
 
 -- PARTICIPANTE_PROGRAMA -------------------------------------
 CREATE TABLE participante_programa(
     id_part_prog INT PRIMARY KEY AUTO_INCREMENT,
     rol VARCHAR(20) NOT NULL,
-    nombre_programa VARCHAR(20),
-    ci VARCHAR(8) NOT NULL,
+    nombre_programa VARCHAR(30),
+    ci VARCHAR(9) NOT NULL,
     FOREIGN KEY (nombre_programa) REFERENCES programa_academico(nombre_programa),
     FOREIGN KEY (ci) REFERENCES participante(ci)
 );
@@ -86,7 +85,7 @@ CREATE TABLE reserva(
 -- RESERVA_PARTICIPANTE ---------------------------------------
 CREATE TABLE reserva_participante (
     id_reserva_part INT PRIMARY KEY AUTO_INCREMENT,
-    ci VARCHAR(8) NOT NULL,
+    ci VARCHAR(9) NOT NULL,
     id_reserva INT NOT NULL,
     fecha_solicitud DATETIME,
     asistencia TINYINT(1),
@@ -118,10 +117,111 @@ DESCRIBE turnos;
 DESCRIBE reserva;
 
 
-SELECT * FROM sala
 
-SELECT * FROM reserva
+SELECT * FROM reserva;
+SELECT * FROM participante;
+SELECT * FROM participante_programa;
+SELECT * FROM login;
+SELECT * FROM edificio;
+SELECT * FROM facultad;
+SELECT * FROM programa_academico;
+SELECT * FROM turnos;
+SELECT * FROM sala;
+SELECT * FROM reserva_participante rp
+    JOIN reserva r WHERE r.id_reserva = rp.id_reserva
+TRUNCATE TABLE participante;
+DROP TABLE login;
+
+INSERT INTO participante_programa( rol, nombre_programa, ci) VALUES ('Alumno','a','58898A')
+
+;
+SELECT
+            p.ci,
+            p.nombre,
+            p.apellido,
+            p.correo,
+            pp.rol AS rol_programa,
+            pp.nombre_programa,
+            pr.tipo AS tipo_programa
+        FROM participante p
+        JOIN login l ON l.correo = p.correo
+        JOIN participante_programa pp ON pp.ci = p.ci
+        JOIN programa_academico pr ON pr.nombre_programa = pp.nombre_programa
+        WHERE l.correo = 'c@m.com'
+          AND l.contrasena = ' '
+          AND pp.rol = 'Alumno'
+        LIMIT 1;
+
+        SELECT *
+        FROM participante p
+        JOIN login l ON l.correo = p.correo;
 
 
-describe reserva
 
+describe reserva;
+DELETE FROM facultad
+WHERE nombre = 'Derecho';
+
+DELETE FROM participante_programa
+WHERE id_part_prog = 8
+DELETE FROM participante_programa
+WHERE id_part_prog = 10
+;
+INSERT INTO sala(nombre_sala, capacidad, tipo_sala, edificio) VALUES ('M001', 40, 'Posgrado', 'Mullin')
+ALTER TABLE participante
+CHANGE COLUMN `ci` `ci` VARCHAR(9);
+
+
+ALTER TABLE programa_academico
+CHANGE COLUMN `nombre_facultad` `nombre_facultad` VARCHAR(30);
+
+ALTER TABLE programa_academico
+CHANGE COLUMN `tipo` `tipo` VARCHAR(10);
+
+ALTER TABLE reserva_participante
+CHANGE COLUMN `ci` `ci` VARCHAR(9);
+
+ALTER TABLE participante_programa
+CHANGE COLUMN `nombre_programa` `nombre_programa` VARCHAR(30);
+
+describe programa_academico;
+
+DROP DATABASE OBL;
+CREATE DATABASE OBL;
+USE OBL;
+
+SELECT CONCAT('[', nombre_edificio, ']')
+FROM edificio;
+
+INSERT INTO facultad (nombre)
+VALUES ('FacuTest');
+INSERT INTO programa_academico
+VALUES ('coso2', 'FacuTest', 'Grado');
+INSERT INTO participante_programa (rol, nombre_programa, ci )
+VALUES ('Alumno', 'coso', '58898A');
+INSERT INTO edificio (nombre_edificio, direccion, departamento)
+VALUES ('Ed1', 'Calle Falsa 123', 'Montevideo');
+INSERT INTO sala (nombre_sala, capacidad, tipo_sala, edificio)
+VALUES ('P01A', 30, 'Grado', 'Ed1');
+INSERT INTO sala (nombre_sala, capacidad, tipo_sala, edificio)
+VALUES ('P01B', 30, 'Docente', 'Ed1');
+
+
+SELECT l.correo, contrasena,pp.rol , pp.nombre_programa, pa.tipo FROM login l
+JOIN participante p ON l.correo = p.correo
+JOIN participante_programa pp ON p.ci = pp.ci
+JOIN programa_academico pa ON pa.nombre_programa = pp.nombre_programa
+
+SELECT * FROM participante
+JOIN login ON participante.correo = login.correo
+
+
+SELECT p.ci, p.nombre, p.apellido, pp.nombre_programa
+FROM participante_programa pp
+JOIN participante p ON p.ci = pp.ci
+WHERE pp.nombre_programa = 'a'
+
+
+SELECT edificio
+FROM sala
+WHERE nombre_sala = 'P002'

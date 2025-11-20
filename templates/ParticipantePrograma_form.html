@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscribirse a Programa</title>
+</head>
+<body>
+
+<h1>Programas Académicos</h1>
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Programa</th>
+        <th>Facultad</th>
+        <th>Tipo</th>
+        <th>Acción</th>
+    </tr>
+
+    {% for p in programas %}
+    <tr>
+        <td>{{ p.nombre_programa }}</td>
+        <td>{{ p.nombre_facultad }}</td>
+        <td>{{ p.tipo }}</td>
+
+    <td>
+    {% if p.nombre_programa in inscritos %}
+        <b>Inscripto</b>
+    {% else %}
+        <form method="POST" action="/ObjectCreator">
+            <input type="hidden" name="class_name" value="ParticipantePrograma">
+            <input type="hidden" name="programa" value="{{ p.nombre_programa }}">
+            <input type="hidden" name="participante" value="{{ session['ci'] }}">
+            <input type="hidden" name="rol" value="{{ session['rol'] }}">
+            <button type="submit">Inscribirme</button>
+        </form>
+    {% endif %}
+    </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

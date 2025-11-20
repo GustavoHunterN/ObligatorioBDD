@@ -8,12 +8,16 @@
 
 <h1>Crear Edificio</h1>
 
-<form action="/ObjectCreator" method="POST">
+<form action="{{ url_for('object_creator') }}" method="POST">
 
     <!-- Nombre de la clase -->
     <input type="hidden" name="class_name" value="Edificio">
 
     <!-- Atributos del constructor -->
+
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" required><br><br>
+
     <label>Dirección:</label><br>
     <input type="text" name="direccion" required><br><br>
 

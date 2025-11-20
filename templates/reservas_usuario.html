@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Reservas</title>
+</head>
+<body>
+
+<h1>Mis Reservas</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Sala</th>
+        <th>Edificio</th>
+        <th>Turno</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for r in reservas %}
+    <tr>
+        <td>{{ r.id_reserva }}</td>
+        <td>{{ r.fecha }}</td>
+        <td>{{ r.sala }}</td>
+        <td>{{ r.nombre_edificio }}</td>
+
+        <td>
+            {{ "%02d"|format(r.hora_inicio.seconds//3600) }}:
+            {{ "%02d"|format((r.hora_inicio.seconds % 3600)//60) }}
+            -
+            {{ "%02d"|format(r.hora_final.seconds//3600) }}:
+            {{ "%02d"|format((r.hora_final.seconds % 3600)//60) }}
+        </td>
+
+        <td>{{ r.estado }}</td>
+
+        <td>
+
+            {% if r.estado == 'Cancelada' %}
+                <b>Cancelada</b>
+            {% else %}
+                <form action="/reservas/cancelar/{{ r.id_reserva }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('¿Cancelar esta reserva?')">Cancelar</button>
+                </form>
+            {% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

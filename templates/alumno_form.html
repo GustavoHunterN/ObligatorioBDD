@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Docente</title>
+    <title>Alumno</title>
 </head>
 <body>
 
-<h1>Registrar Docente</h1>
+<h1>Registrar Alumno</h1>
 
 {% with msgs = get_flashed_messages(with_categories=true) %}
   {% if msgs %}
@@ -20,9 +20,11 @@
 
 <form action="{{ url_for('object_creator') }}" method="POST">
     <input type="hidden" name="class_name" value="Participante">
-    <input type="hidden" name="type" value="docente">
+    <input type="hidden" name="type" value="alumno">
     <label>CI (sin letra):</label><br>
-    <input type="text" name="ci" required><br><br>
+    <input type="text" name=ci_raw id="ci_raw" required><br><br>
+
+
 
     <label>Nombre:</label><br>
     <input type="text" name="nombre" required><br><br>
@@ -36,13 +38,13 @@
     <label>Contraseña:</label><br>
     <input type="password" name="contrasena" required><br><br>
 
-    <button type="submit">Crear Docente</button>
+    <button type="submit">Crear Alumno</button>
 
 </form>
 
 <p><a href="/">Volver al menú</a></p>
 
-<p><a href="{{ url_for('login_docente_form') }}">Iniciar Sesión</a></p>
+<p><a href="{{ url_for('login_alumno') }}">Iniciar Sesión</a></p>
 
 </body>
 </html>

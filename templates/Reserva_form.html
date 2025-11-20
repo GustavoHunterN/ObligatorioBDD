@@ -5,6 +5,15 @@
     <title>Nueva Reserva</title>
 </head>
 <body>
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+      <ul>
+      {% for cat, msg in msgs %}
+        <li>[{{ cat }}] {{ msg }}</li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+{% endwith %}
 
 <h1>Crear reserva — Fecha {{ fecha }}</h1>
 
@@ -12,7 +21,7 @@
 <form method="GET" action="/reserva/crear">
 
     <label>Fecha:
-        <input type="date" name="fecha" value="{{ fecha }}">
+        <input type="date" name="fecha" value="{{ fecha }}" min="{{ fecha_hoy }}">
     </label>
 
     <label>Edificio:
@@ -31,16 +40,16 @@
         <select name="id_turno">
             <option value="">Todos</option>
             {% for t in todos_los_turnos %}
-                <option value="{{ t.id_turno }}"
-                   {% if filtro_turno == t.id_turno|string %}selected{% endif %}>
+             <option value="{{ t.id_turno }}"
+                {% if filtro_turno == (t.id_turno | string) %}selected{% endif %}>
 
-                    {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
-                    {{ "%02d"|format((t.hora_inicio.seconds % 3600)//60) }}
-                    -
-                    {{ "%02d"|format(t.hora_final.seconds//3600) }}:
-                    {{ "%02d"|format((t.hora_final.seconds % 3600)//60) }}
+                {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
+                {{ "%02d"|format((t.hora_inicio.seconds % 3600)//60) }}
+                -
+                {{ "%02d"|format(t.hora_final.seconds//3600) }}:
+                {{ "%02d"|format((t.hora_final.seconds % 3600)//60) }}
 
-                </option>
+            </option>
             {% endfor %}
         </select>
     </label>
@@ -57,6 +66,7 @@
     <tr>
         <th>Edificio</th>
         <th>Sala</th>
+        <th>Tipo</th>
         <th>Turno</th>
         <th>Estado</th>
         <th>Acción</th>
@@ -67,6 +77,7 @@
             <tr>
                 <td>{{ s.edificio }}</td>
                 <td>{{ s.nombre_sala }}</td>
+                <td>{{ s.tipo_sala }}</td>
 
                 <td>
                   {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
@@ -88,12 +99,19 @@
 
                 <td>
                     {% if not ocupado %}
-                    <form method="POST" action="/reserva/guardar">
-                        <input type="hidden" name="fecha" value="{{ fecha }}">
+                    <form method="POST" action="/ObjectCreator">
+                        <input type="hidden" name="ci_sesion" value="{{ ci_sesion }}">
+                        <input type="hidden" name="class_name" value="Reserva">
                         <input type="hidden" name="nombre_sala" value="{{ s.nombre_sala }}">
-                        <input type="hidden" name="nombre_edificio" value="{{ s.edificio }}">
                         <input type="hidden" name="id_turno" value="{{ t.id_turno }}">
-                        <button type="submit">Reservar</button>
+                        <input type="hidden" name="edificio" value="{{ s.edificio }}">
+                        <input type="hidden" name="estado" value="Activa">
+                        <input type="hidden" name="fecha" value="{{ fecha }}">
+
+
+                        <a href="/reserva/participantes?sala={{ s.nombre_sala }}&id_turno={{ t.id_turno }}&fecha={{ fecha }}">
+                            <button type="button">Reservar</button>
+                        </a>
                     </form>
                     {% endif %}
                 </td>

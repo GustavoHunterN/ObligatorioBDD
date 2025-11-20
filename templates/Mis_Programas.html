@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Programas</title>
+</head>
+<body>
+
+<h1>Mis Programas</h1>
+
+{% if programas %}
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Programa</th>
+        <th>Tipo</th>
+        <th>Acción</th>
+    </tr>
+
+    {% for p in programas %}
+    <tr>
+        <td>{{ p.nombre_programa }}</td>
+        <td>{{ p.tipo }}</td>
+        <td>
+            <a href="/mis_programas/{{ p.nombre_programa }}/reservar">
+                <button>Reservar sala</button>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>No estás inscripto en ningún programa.</p>
+{% endif %}
+
+</body>
+</html>

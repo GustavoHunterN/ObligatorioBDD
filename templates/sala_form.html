@@ -2,48 +2,48 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Sala</title>
+    <title>Generar Salas</title>
 </head>
 <body>
 
-<h1>Crear Sala</h1>
+<h1>Generar salas automáticamente</h1>
 
 <form action="/ObjectCreator" method="POST">
-
-    <!-- Tipo de objeto -->
     <input type="hidden" name="class_name" value="Sala">
 
-    <!-- Nombre sala -->
-    <label>Nombre de la sala:</label><br>
-    <input type="text" name="nombre" required><br><br>
-
-    <!-- Capacidad -->
-    <label>Capacidad:</label><br>
-    <input type="number" name="capacidad" min="1" required><br><br>
-
-    <!-- Tipo sala -->
-    <label>Tipo de sala:</label><br>
-    <select name="tipo_sala" required>
-        <option value="Alumnos">Alumnos</option>
-        <option value="Docentes">Docentes</option>
-        <option value="Libre">Libre</option>
-    </select>
-    <br><br>
-
-    <!-- Lista de edificios cargados desde Flask -->
-    <label>Edificio:</label><br>
+    <!-- EDIFICIO -->
+    <label>Edificio:</label>
     <select name="edificio" required>
-        {% for ed in edificios %}
-            <option value="{{ ed['nombre_edificio']}}">
-                {{ ed['nombre_edificio'] }}
-            </option>
+        {% for e in edificios %}
+            <option value="{{ e.nombre_edificio }}">{{ e.nombre_edificio }}</option>
         {% endfor %}
     </select>
     <br><br>
 
-    <button type="submit">Crear Sala</button>
+    <!-- CANTIDAD -->
+    <label>Cantidad de salas a crear:</label>
+    <input type="number" name="cantidad" min="1" required>
+    <br><br>
+
+    <!-- CAPACIDAD -->
+    <label>Capacidad por sala:</label>
+    <input type="number" name="capacidad" min="1" required>
+    <br><br>
+
+    <!-- TIPO -->
+    <label>Tipo de sala:</label>
+    <select name="tipo" required>
+        <option value="Grado">Grado</option>
+        <option value="Posgrado">Posgrado</option>
+        <option value="Libre">Libre</option>
+    </select>
+    <br><br>
+
+    <button type="submit">Crear salas</button>
 
 </form>
+
+<p><a href="/">Volver al inicio</a></p>
 
 </body>
 </html>

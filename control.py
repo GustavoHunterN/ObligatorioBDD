@@ -1,4 +1,5 @@
 import Clases as cl
+import datetime
 
 #Diccionarios para controlar las keys
 
@@ -14,7 +15,7 @@ n_of_instances = {"Facultad" : 0,
 }
 
 dtypes = {"Facultad" :
-                        {"nombre": str,
+                        {
                          "facultad": object,
                          }
           ,
@@ -22,9 +23,9 @@ dtypes = {"Facultad" :
 
           "Programa" :
                         {"nombre": str,
-                        "Tipo": ["Grado",
-                                 "Posgrado"],
-                         "id_facultad": str,
+                         "nombre_facultad": str,
+                         "Tipo": ["Grado",
+                                  "Posgrado"]
                          }
           ,
 
@@ -40,8 +41,8 @@ dtypes = {"Facultad" :
 
 
           "ParticipantePrograma" :
-                        {"programa": object,
-                         "participante": object,
+                        {"programa": str,
+                         "participante": str,
                         "rol": ["Alumno",
                                  "Docente"],
                          }
@@ -51,8 +52,8 @@ dtypes = {"Facultad" :
           "Sala" :
                         {"nombre": str,
                         "capacidad": int,
-                         "edificio" : object,
-                         "tipo": ["Grado",
+                         "edificio" : str,
+                         "tipo": ["Docente",
                                   "Posgrado",
                                   "Libre"]
                      }
@@ -66,20 +67,16 @@ dtypes = {"Facultad" :
 
 
           "Reserva" : {"id":str,
-                       "edificio": object,
-                       "sala": object,
-                       "turno": object,
+                       "sala": str,
+                       "turno": str,
                         "estado":["Activa",
                                  "Cancelada",
                                  "S/A",
                                  "Finalizada"],
                        "fecha": str
                        },
-          "ReservaParticipante" : {"reserva" : object,
-                                   "participante": object,
-                                   "fecha_sol": str,
-                                   "asistencia": bool
-
+          "ReservaParticipante" : {"id_reserva" : str,
+                                   "participante": str,
                                     },
           "Sancion" : { "participante": object,
                         "fecha_inicio": str,
@@ -112,7 +109,14 @@ def check_dtypes(obj, dtypes):
         # Si el dominio es un tipo (ej: str, int)
         if isinstance(dominio, type):
             if not isinstance(valor, dominio):
-                errores.append(f"{clase}.{atributo}: se esperaba {dominio.__name__}, se obtuvo {type(valor).__name__}")
+                try:
+                    # intentar conversión automática
+                    valor_convertido = dominio(valor)
+                    setattr(obj, atributo, valor_convertido)
+                    print(obj, atributo, valor_convertido)
+                except Exception:
+                    errores.append(f"{clase}.{atributo}: se esperaba {dominio.__name__}, se obtuvo {type(valor).__name__}")
+                    continue
 
         # Si el dominio es una lista de valores posibles
         elif isinstance(dominio, list):
@@ -137,7 +141,7 @@ def create_objeto(nombre_clase, *args):
     # Si args tiene un solo elemento y ese elemento es una lista o tupla → desempacamos
     if len(args) == 1 and isinstance(args[0], (list, tuple)):
         args = args[0]
-
+    print(args)
     objeto = clase(*args)
     validacion = check_dtypes(objeto, dtypes)
 

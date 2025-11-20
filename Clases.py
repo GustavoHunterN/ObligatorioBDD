@@ -1,3 +1,4 @@
+import datetime
 class Edificio:
     def __init__(self, nombre, direccion, departamento):
         self.nombre = nombre
@@ -32,34 +33,32 @@ class Edificio:
 
 class Sala:
 
-    def __init__(self, nombre, capacidad, edificio, tipo):
-        self.nombre = nombre
+    def __init__(self, nombre, capacidad, tipo, edificio):
         self.capacidad = capacidad
-        self.edificio = edificio
+        self.edificio = edificio      # String o Edificio
         self.tipo_sala = tipo
+        self.nombre = nombre
 
     
     def __str__(self):
-        return f"Sala: {self.nombre} — Capacidad: {self.capacidad} — Tipo: {self.tipo_sala} — Edificio: {self.edificio.nombre}"
+        return f"Sala: {self.nombre} — Capacidad: {self.capacidad} — Tipo: {self.tipo_sala} — Edificio: {self.edificio}"
 
     
     def __repr__(self):
         return (f"Sala(nombre={self.nombre!r}, capacidad={self.capacidad!r}, "
                 f"edificio={self.edificio!r}, tipo_sala={self.tipo_sala!r})")
 
-    def validar_edificio(self):
-        if not isinstance(self.edificio, Edificio):
-            raise TypeError("El edificio debe ser de tipo Edificio")
 
-    def set_nombre(self, num):
-        self.nombre = str(self.edificio.nombre[0].upper() + "0" + num)
+
 
     def save(self, conexion):
+        print("TIPO DE EDIFICIO:", type(self.edificio))
+        print("VALOR DE EDIFICIO:", self.edificio)
         query = """
         INSERT INTO sala (nombre_sala, capacidad, tipo_sala, edificio)
         VALUES (%s, %s, %s, %s);
         """
-        conexion.cursor.execute(query, (self.nombre, self.capacidad, self.tipo_sala, self.edificio.nombre))
+        conexion.cursor.execute(query, (self.nombre, self.capacidad, self.tipo_sala, self.edificio))
         conexion.cnx.commit()
 
     def load_all(self, conexion):
@@ -111,10 +110,10 @@ class Turnos:
 
 class Reserva:
     # [MOD] id lo maneja la DB (AUTO_INCREMENT). Guardamos id_reserva tras save()
-    def __init__(self, sala, turno, estado, fecha):
-        self.sala = sala              # instancia Sala
-        self.edificio = sala.edificio # cache útil
-        self.turno = turno            # instancia Turnos (con id_turno)
+    def __init__(self, sala, id_turno, edificio, estado, fecha):
+        self.sala = sala
+        self.id_turno = id_turno
+        self.edificio = edificio
         self.estado = estado
         self.fecha = fecha
         self.id_reserva = None
@@ -127,24 +126,22 @@ class Reserva:
     
     def __repr__(self):
         return (f"Reserva(id_reserva={self.id_reserva!r}, sala={self.sala!r}, edificio={self.edificio!r}, "
-                f"turno={self.turno!r}, estado={self.estado!r}, fecha={self.fecha!r})")
+                f"turno={self.id_turno!r}, estado={self.estado!r}, fecha={self.fecha!r})")
 
     def validar_sala(self):
         if not isinstance(self.sala, Sala):
             raise TypeError("La sala debe ser de tipo Sala")
 
-    def validar_turno(self):
-        if not isinstance(self.turno, Turnos):
-            raise TypeError("El turno debe ser de tipo Turnos")
+
 
     def save(self, conexion):
-        if self.turno.id_turno is None:
+        if self.id_turno is None:
             raise ValueError("Turnos.save() debe llamarse antes para obtener id_turno")
         query = """
         INSERT INTO reserva (fecha, estado, id_turno, nombre_edificio, sala)
         VALUES (%s, %s, %s, %s, %s);
         """
-        conexion.cursor.execute(query, (self.fecha, self.estado, self.turno.id_turno, self.edificio.nombre, self.sala.nombre))
+        conexion.cursor.execute(query, (self.fecha, self.estado, self.id_turno, self.edificio,self.sala))
         self.id_reserva = conexion.cursor.lastrowid  
         conexion.cnx.commit()
 
@@ -176,7 +173,7 @@ class Participante:
                 f"apellido={self.apellido!r}, correo={self.correo!r})")
 
     def save(self, conexion):
-        query_login = "INSERT INTO login (correo, contraseña) VALUES (%s, %s);"
+        query_login = "INSERT INTO login (correo, contrasena) VALUES (%s, %s);"
         query_part = """
         INSERT INTO participante (ci, nombre, apellido, correo)
         VALUES (%s, %s, %s, %s);
@@ -229,31 +226,31 @@ class Sancion:
 
 
 class ReservaParticipante:
-    def __init__(self, reserva, participante, fecha_sol, asistencia):
-        self.reserva = reserva
+    def __init__(self, participante, id_reserva):
+        self.id_reserva = id_reserva
         self.participante = participante
-        self.fecha_sol = fecha_sol
-        self.asistencia = asistencia
-        self.id_reserva_part = None  
+        self.fecha_sol = datetime.date.today()
+        self.asistencia = 0
+        self.id_reserva_part = None
 
     
     def __str__(self):
         estado = "Asistió" if self.asistencia else "No asistió"
-        return f"ReservaParticipante #{self.id_reserva_part or '—'} — {self.participante.nombre} → {self.reserva.sala.nombre} ({estado})"
+        return f"ReservaParticipante #{self.id_reserva_part or '—'} — {self.participante.nombre} → {self.id_reserva.sala.nombre} ({estado})"
 
     
     def __repr__(self):
-        return (f"ReservaParticipante(id_reserva_part={self.id_reserva_part!r}, reserva={self.reserva!r}, "
+        return (f"ReservaParticipante(id_reserva_part={self.id_reserva_part!r}, reserva={self.id_reserva!r}, "
                 f"fecha_sol={self.fecha_sol!r}, asistencia={self.asistencia!r}, participante={self.participante!r})")
 
     def save(self, conexion):
-        if self.reserva.id_reserva is None:
+        if self.id_reserva is None:
             raise ValueError("Reserva.save() debe llamarse antes para obtener id_reserva")
         query = """
         INSERT INTO reserva_participante (ci, id_reserva, fecha_solicitud, asistencia)
         VALUES (%s, %s, %s, %s);
         """
-        conexion.cursor.execute(query, (self.participante.ci, self.reserva.id_reserva, self.fecha_sol, self.asistencia))
+        conexion.cursor.execute(query, (self.participante, self.id_reserva, self.fecha_sol, self.asistencia))
         self.id_reserva_part = conexion.cursor.lastrowid  
         conexion.cnx.commit()
 
@@ -267,24 +264,23 @@ class ReservaParticipante:
 
 
 class Facultad:
-    def __init__(self, id_facultad, nombre):
-        self.id = id_facultad
-        self.nombre = nombre
+    def __init__(self, nombre):
+        self.nombre = nombre[0].upper() + nombre[1:].lower()
 
     
     def __str__(self):
-        return f"Facultad: {self.nombre} (ID: {self.id})"
+        return f"Facultad: {self.nombre}"
 
     
     def __repr__(self):
-        return f"Facultad(id={self.id!r}, nombre={self.nombre!r})"
+        return f"Facultad(nombre={self.nombre!r})"
 
     def save(self, conexion):
         query = """
-        INSERT INTO facultad (id_facultad, nombre)
-        VALUES (%s, %s);
+        INSERT INTO facultad (nombre)
+        VALUES (%s);
         """
-        conexion.cursor.execute(query, (self.id, self.nombre))
+        conexion.cursor.execute(query, (self.nombre,))
         conexion.cnx.commit()
 
     def load_all(self, conexion):
@@ -297,25 +293,25 @@ class Facultad:
 
 
 class Programa:
-    def __init__(self, facultad, tipo, nombre):
-        self.facultad = facultad   # instancia Facultad
+    def __init__(self,nombre,nombre_facultad,tipo):
+        self.nombre_facultad = nombre_facultad
         self.tipo = tipo
         self.nombre = nombre
 
     
     def __str__(self):
-        return f"Programa: {self.nombre} ({self.tipo}) — {self.facultad.nombre}"
+        return f"Programa: {self.nombre} ({self.tipo})"
 
     
     def __repr__(self):
-        return (f"Programa(facultad={self.facultad!r}, tipo={self.tipo!r}, nombre={self.nombre!r})")
+        return (f"Programa( tipo={self.tipo!r}, nombre={self.nombre!r})")
 
     def save(self, conexion):
         query = """
-        INSERT INTO programa_academico (nombre_programa, id_facultad, tipo)
+        INSERT INTO programa_academico (nombre_programa, nombre_facultad, tipo)
         VALUES (%s, %s, %s);
         """
-        conexion.cursor.execute(query, (self.nombre, self.facultad.id, self.tipo))
+        conexion.cursor.execute(query, (self.nombre, self.nombre_facultad, self.tipo))
         conexion.cnx.commit()
 
     def load_all(self, conexion):
@@ -348,7 +344,7 @@ class ParticipantePrograma:
         INSERT INTO participante_programa (rol, nombre_programa, ci)
         VALUES (%s, %s, %s);
         """
-        conexion.cursor.execute(query, (self.rol, self.programa.nombre, self.participante.ci))
+        conexion.cursor.execute(query, (self.rol, self.programa, self.participante))
         self.id_part_prog = conexion.cursor.lastrowid  
         conexion.cnx.commit()
 

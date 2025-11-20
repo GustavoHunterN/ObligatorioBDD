@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Editar sala</title>
+</head>
+<body>
+
+<h1>Editar sala: {{ sala.nombre_sala }}</h1>
+
+<form action="/salas/editar/{{ sala.nombre_sala }}" method="POST">
+
+    <label>Capacidad:</label><br>
+    <input type="number" name="capacidad" value="{{ sala.capacidad }}" required>
+    <br><br>
+
+    <label>Tipo:</label><br>
+    <select name="tipo">
+        <option value="Grado"    {% if sala.tipo_sala == "Grado" %}selected{% endif %}>Grado</option>
+        <option value="Posgrado" {% if sala.tipo_sala == "Posgrado" %}selected{% endif %}>Posgrado</option>
+        <option value="Libre"    {% if sala.tipo_sala == "Libre" %}selected{% endif %}>Libre</option>
+    </select>
+    <br><br>
+
+    <label>Edificio:</label><br>
+    <select name="edificio" required>
+        {% for e in edificios %}
+            <option value="{{ e.nombre_edificio }}"
+                {% if sala.edificio == e.nombre_edificio %}selected{% endif %}>
+                {{ e.nombre_edificio }}
+            </option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <button type="submit">Guardar cambios</button>
+
+</form>
+
+<p><a href="/salas">Volver</a></p>
+
+</body>
+</html>

@@ -4,16 +4,23 @@
 <body>
   <h1>Nueva Facultad</h1>
 
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+      <ul>
+      {% for cat, msg in msgs %}
+        <li>[{{ cat }}] {{ msg }}</li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+{% endwith %}
+
   <form method="post" action="{{ url_for('object_creator') }}">
     <input type="hidden" name="class_name" value="Facultad">
 
-    <label>Dirección:
-      <input type="text" name="direccion" required>
+    <label>Nombre:
+      <input type="text" name="Nombre" required>
     </label><br>
 
-    <label>Departamento:
-      <input type="text" name="departamento" required>
-    </label><br>
 
     <button type="submit">Registrar</button>
   </form>
