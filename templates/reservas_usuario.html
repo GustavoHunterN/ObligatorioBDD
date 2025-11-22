@@ -5,7 +5,15 @@
     <title>Mis Reservas</title>
 </head>
 <body>
-
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+        <ul>
+        {% for categoria, mensaje in mensajes %}
+            <li><strong>{{ categoria }}:</strong> {{ mensaje }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 <h1>Mis Reservas</h1>
 
 <table border="1" cellpadding="5">
@@ -41,9 +49,21 @@
             {% if r.estado == 'Cancelada' %}
                 <b>Cancelada</b>
             {% else %}
+                            <!-- Botón Editar -->
+                <form action="/reservas/editar/{{ r.id_reserva }}" method="GET" style="display:inline;">
+                    <button type="submit">Editar</button>
+                </form>
+
+                <!-- Botón Cancelar -->
                 <form action="/reservas/cancelar/{{ r.id_reserva }}" method="POST" style="display:inline;">
                     <button type="submit" onclick="return confirm('¿Cancelar esta reserva?')">Cancelar</button>
                 </form>
+                {% if session["rol"] == "Docente" and r.estado == "Activa" %}
+                    <!-- Botón Pasar Lista -->
+                    <form action="/reservas/{{ r.id_reserva }}/asistencia" method="GET" style="display:inline;">
+                        <button type="submit">Pasar lista</button>
+                    </form>
+                {% endif %}
             {% endif %}
 
         </td>

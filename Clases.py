@@ -109,7 +109,7 @@ class Turnos:
         return resultado
 
 class Reserva:
-    # [MOD] id lo maneja la DB (AUTO_INCREMENT). Guardamos id_reserva tras save()
+
     def __init__(self, sala, id_turno, edificio, estado, fecha):
         self.sala = sala
         self.id_turno = id_turno
@@ -141,8 +141,9 @@ class Reserva:
         INSERT INTO reserva (fecha, estado, id_turno, nombre_edificio, sala)
         VALUES (%s, %s, %s, %s, %s);
         """
+
         conexion.cursor.execute(query, (self.fecha, self.estado, self.id_turno, self.edificio,self.sala))
-        self.id_reserva = conexion.cursor.lastrowid  
+        self.id_reserva = conexion.cursor.lastrowid
         conexion.cnx.commit()
 
     def load_all(self, conexion):
@@ -153,54 +154,16 @@ class Reserva:
         resultado = conexion.cursor.fetchall()
         return resultado
 
-
-class Participante:
-    def __init__(self, ci, nombre, apellido, correo, contrasena):
-        self.ci = ci
-        self.nombre = nombre
-        self.apellido = apellido
-        self.correo = correo
-        self.contrasena = contrasena
-        self.sanciones = []
-
-    
-    def __str__(self):
-        return f"{self.nombre} {self.apellido} ({self.ci}) — {self.correo}"
-
-    
-    def __repr__(self):
-        return (f"Participante(ci={self.ci!r}, nombre={self.nombre!r}, "
-                f"apellido={self.apellido!r}, correo={self.correo!r})")
-
-    def save(self, conexion):
-        query_login = "INSERT INTO login (correo, contrasena) VALUES (%s, %s);"
-        query_part = """
-        INSERT INTO participante (ci, nombre, apellido, correo)
-        VALUES (%s, %s, %s, %s);
-        """
-        conexion.cursor.execute(query_login, (self.correo, self.contrasena))
-        conexion.cursor.execute(query_part, (self.ci, self.nombre, self.apellido, self.correo))
-        conexion.cnx.commit()
-
-    def load_all(self, conexion):
-        query = """
-        SELECT * FROM participante
-        """
-        conexion.cursor.execute(query)
-        resultado = conexion.cursor.fetchall()
-        return resultado
-
-
 class Sancion:
-    def __init__(self, participante, fecha_inicio, fecha_fin):
+    def __init__(self, participante):
         self.participante = participante
-        self.fecha_inicio = fecha_inicio
-        self.fecha_fin = fecha_fin
+        self.fecha_inicio = datetime.date.today()
+        self.fecha_fin = self.fecha_inicio + datetime.timedelta(days=60)
         self.id_sancion = None  
 
     
     def __str__(self):
-        return f"Sanción #{self.id_sancion or '—'} para {self.participante.nombre}: {self.fecha_inicio} → {self.fecha_fin}"
+        return f"Sanción #{self.id_sancion or '—'} para {self.participante}: {self.fecha_inicio} → {self.fecha_fin}"
 
     
     def __repr__(self):
@@ -212,8 +175,8 @@ class Sancion:
         INSERT INTO sancion_participante (ci, fecha_inicio, fecha_final)
         VALUES (%s, %s, %s);
         """
-        conexion.cursor.execute(query, (self.participante.ci, self.fecha_inicio, self.fecha_fin))
-        self.id_sancion = conexion.cursor.lastrowid  
+        conexion.cursor.execute(query, (self.participante, self.fecha_inicio, self.fecha_fin))
+        self.id_sancion = conexion.cursor.lastrowid
         conexion.cnx.commit()
 
     def load_all(self, conexion):
@@ -226,8 +189,8 @@ class Sancion:
 
 
 class ReservaParticipante:
-    def __init__(self, participante, id_reserva):
-        self.id_reserva = id_reserva
+    def __init__(self, id_reserva,participante,):
+        self.id_reserva = int(id_reserva)
         self.participante = participante
         self.fecha_sol = datetime.date.today()
         self.asistencia = 0
@@ -236,7 +199,7 @@ class ReservaParticipante:
     
     def __str__(self):
         estado = "Asistió" if self.asistencia else "No asistió"
-        return f"ReservaParticipante #{self.id_reserva_part or '—'} — {self.participante.nombre} → {self.id_reserva.sala.nombre} ({estado})"
+        return f"ReservaParticipante #{self.id_reserva_part or '—'} — {self.participante} → {self.id_reserva} ({estado})"
 
     
     def __repr__(self):
@@ -355,3 +318,75 @@ class ParticipantePrograma:
         conexion.cursor.execute(query)
         resultado = conexion.cursor.fetchall()
         return resultado
+
+
+class Participante:
+    def __init__(self, ci, nombre, apellido, correo, contrasena, rol):
+        self.ci = ci
+        self.nombre = nombre
+        self.apellido = apellido
+        self.correo = correo
+        self.contrasena = contrasena
+        self.sanciones = []
+        self.rol = rol
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.ci}) — {self.correo}"
+
+    def __repr__(self):
+        return (f"Participante(ci={self.ci!r}, nombre={self.nombre!r}, "
+                f"apellido={self.apellido!r}, correo={self.correo!r})")
+
+    def save(self, conexion):
+        query_login = "INSERT INTO login (correo, contrasena) VALUES (%s, %s);"
+        query_part = """
+        INSERT INTO participante (ci, nombre, apellido, correo, rol)
+        VALUES (%s, %s, %s, %s);
+        """
+        conexion.cursor.execute(query_login, (self.correo, self.contrasena))
+        conexion.cursor.execute(query_part, (self.ci, self.nombre, self.apellido, self.correo, self.rol))
+        conexion.cnx.commit()
+
+    def load_all(self, conexion):
+        query = """
+        SELECT * FROM participante
+        """
+        conexion.cursor.execute(query)
+        resultado = conexion.cursor.fetchall()
+        return resultado
+
+
+class Alumno(Participante):
+    def __init__(self, ci, nombre, apellido):
+        self.ci  = f'{ci}A'
+        self.nombre = f'{nombre[0].upper()+nombre[1:].lower()}'
+        self.apellido = f'{apellido[0].upper()+apellido[1:].lower()}'
+        self.correo = f"{self.nombre}.{self.apellido}@alumno.com"
+        self.contrasena = " "
+        self.rol = "Alumno"
+        super().__init__(self.ci, self.nombre, self.apellido, self.correo, self.contrasena)
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.ci}) — {self.correo}"
+
+    def __repr__(self):
+        return (f"Alumno(ci={self.ci!r}, nombre={self.nombre!r}, "
+                f"apellido={self.apellido!r}, correo={self.correo!r})")
+
+
+class Docente(Participante):
+    def __init__(self, ci, nombre, apellido):
+        self.ci  = f'{ci}D'
+        self.nombre = f'{nombre[0].upper()+nombre[1:].lower()}'
+        self.apellido = f'{apellido[0].upper()+apellido[1:].lower()}'
+        self.correo = f"{self.nombre}.{self.apellido}@docente.com"
+        self.contrasena = " "
+        self.rol = "Docente"
+        super().__init__(self.ci, self.nombre, self.apellido, self.correo, self.contrasena)
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.ci}) — {self.correo}"
+
+    def __repr__(self):
+        return (f"Docente(ci={self.ci!r}, nombre={self.nombre!r}, "
+                f"apellido={self.apellido!r}, correo={self.correo!r})")

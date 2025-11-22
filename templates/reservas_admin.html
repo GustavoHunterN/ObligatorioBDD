@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservas del usuario {{ ci }}</title>
+</head>
+
+<body>
+
+<h1>Reservas del usuario {{ ci }}</h1>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    <ul>
+    {% for categoria, msg in mensajes %}
+      <li><b>{{ categoria }}:</b> {{ msg }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Sala</th>
+        <th>Edificio</th>
+        <th>Turno</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for r in reservas %}
+    <tr>
+        <td>{{ r.id_reserva }}</td>
+        <td>{{ r.fecha }}</td>
+        <td>{{ r.sala }}</td>
+        <td>{{ r.nombre_edificio }}</td>
+        <td>{{ r.hora_inicio }} - {{ r.hora_final }}</td>
+        <td>{{ r.estado }}</td>
+
+        <td>
+            <!-- EDITAR -->
+            <a href="/reservas/editar/{{ r.id_reserva }}">
+                <button>Editar</button>
+            </a>
+
+            <!-- CANCELAR -->
+            {% if r.estado == 'Activa' %}
+            <form action="/reservas/cancelar/{{ r.id_reserva }}"
+                  method="POST"
+                  style="display:inline;"
+                  onsubmit="return confirm('¿Cancelar esta reserva?');">
+                <button>Cancelar</button>
+            </form>
+            {% endif %}
+
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/usuarios"><button>Volver a usuarios</button></a>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar sanción</title>
+</head>
+<body>
+
+<h1>Editar sanción #{{ sancion.id_sancion }}</h1>
+
+<p>
+    <b>Participante:</b> {{ sancion.nombre }} {{ sancion.apellido }} ({{ sancion.ci }}) <br>
+    <b>Fecha inicio:</b> {{ sancion.fecha_inicio }}
+</p>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    <ul>
+    {% for cat, msg in mensajes %}
+      <li><b>{{ cat }}:</b> {{ msg }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <label>Nueva fecha final:</label><br>
+    <input type="date" name="fecha_final" value="{{ sancion.fecha_final }}" required><br><br>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<br>
+<a href="/sanciones"><button>Volver al listado</button></a>
+
+</body>
+</html>

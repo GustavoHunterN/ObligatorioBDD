@@ -21,10 +21,11 @@
         <td>{{ p.nombre_programa }}</td>
         <td>{{ p.tipo }}</td>
         <td>
-            <a href="/mis_programas/{{ p.nombre_programa }}/reservar">
+            <a href="/mis_programas/{{ p.nombre_programa }}/reservar?tipo={{p.tipo}}">
                 <button>Reservar sala</button>
             </a>
         </td>
+
     </tr>
     {% endfor %}
 </table>

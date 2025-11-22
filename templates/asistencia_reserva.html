@@ -1,0 +1,19 @@
+<h1>Pase de lista – Reserva {{ reserva.id_reserva }}</h1>
+
+<h3>{{ reserva.fecha }} – Sala {{ reserva.sala }} ({{ reserva.nombre_edificio }})</h3>
+
+<form action="/reservas/{{ reserva.id_reserva }}/asistencia" method="POST">
+
+    {% for p in participantes %}
+        <label>
+            <input type="checkbox"
+                   name="asistencia_{{ p.ci }}"
+                   {% if p.asistencia == 1 %}checked{% endif %}>
+            {{ p.nombre }} {{ p.apellido }} – {{ p.ci }}
+        </label>
+        <br>
+    {% endfor %}
+
+    <br>
+    <button type="submit">Guardar asistencia</button>
+</form>

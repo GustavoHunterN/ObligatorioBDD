@@ -103,13 +103,13 @@
                         <input type="hidden" name="ci_sesion" value="{{ ci_sesion }}">
                         <input type="hidden" name="class_name" value="Reserva">
                         <input type="hidden" name="nombre_sala" value="{{ s.nombre_sala }}">
-                        <input type="hidden" name="id_turno" value="{{ t.id_turno }}">
+                        <input type="hidden" name="turno" value="{{ t.id_turno }}">
                         <input type="hidden" name="edificio" value="{{ s.edificio }}">
                         <input type="hidden" name="estado" value="Activa">
                         <input type="hidden" name="fecha" value="{{ fecha }}">
 
 
-                        <a href="/reserva/participantes?sala={{ s.nombre_sala }}&id_turno={{ t.id_turno }}&fecha={{ fecha }}">
+                        <a href="/reserva/participantes?sala={{ s.nombre_sala }}&turno={{ t.id_turno }}&fecha={{ fecha }}">
                             <button type="button">Reservar</button>
                         </a>
                     </form>

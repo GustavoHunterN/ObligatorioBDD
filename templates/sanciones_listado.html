@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sanciones</title>
+</head>
+<body>
+
+<h1>Listado de sanciones</h1>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    <ul>
+    {% for cat, msg in mensajes %}
+      <li><b>{{ cat }}:</b> {{ msg }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>CI</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Inicio</th>
+        <th>Final</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for s in sanciones %}
+    <tr>
+        <td>{{ s.id_sancion }}</td>
+        <td>{{ s.ci }}</td>
+        <td>{{ s.nombre }}</td>
+        <td>{{ s.apellido }}</td>
+        <td>{{ s.fecha_inicio }}</td>
+        <td>{{ s.fecha_final }}</td>
+        <td>
+            <a href="/sanciones/editar/{{ s.id_sancion }}">
+                <button>Editar</button>
+            </a>
+
+            <form action="/sanciones/eliminar/{{ s.id_sancion }}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('¿Eliminar sanción?')">
+                    Eliminar
+                </button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/"><button>Volver</button></a>
+
+</body>
+</html>

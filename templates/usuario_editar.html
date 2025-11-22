@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+</head>
+<body>
+
+<h1>Editar Usuario {{ usuario.ci }}</h1>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    <ul>
+    {% for cat, msg in mensajes %}
+      <li><b>{{ cat }}:</b> {{ msg }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" value="{{ usuario.nombre }}" required><br><br>
+
+    <label>Apellido:</label><br>
+    <input type="text" name="apellido" value="{{ usuario.apellido }}" required><br><br>
+
+    <label>Correo:</label><br>
+    <input type="email" name="correo" value="{{ usuario.correo }}" required><br><br>
+
+    <label>Rol:</label><br>
+    <select name="rol">
+        <option value="Alumno"  {% if usuario.rol == 'Alumno' %}selected{% endif %}>Alumno</option>
+        <option value="Docente" {% if usuario.rol == 'Docente' %}selected{% endif %}>Docente</option>
+        <option value="Admin"   {% if usuario.rol == 'Admin' %}selected{% endif %}>Admin</option>
+    </select><br><br>
+
+    <button type="submit">Guardar cambios</button>
+</form>
+
+<br>
+<a href="/usuarios"><button>Volver</button></a>
+
+</body>
+</html>

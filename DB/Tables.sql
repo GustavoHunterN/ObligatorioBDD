@@ -11,6 +11,7 @@ CREATE TABLE participante (
     nombre VARCHAR(15) NOT NULL,
     apellido VARCHAR(15) NOT NULL,
     correo VARCHAR(30) NOT NULL UNIQUE,
+    rol VARCHAR(10) NOT NULL DEFAULT 'Alumno',
     FOREIGN KEY (correo) REFERENCES login(correo)
 );
 
@@ -129,7 +130,10 @@ SELECT * FROM turnos;
 SELECT * FROM sala;
 SELECT * FROM reserva_participante rp
     JOIN reserva r WHERE r.id_reserva = rp.id_reserva
-TRUNCATE TABLE participante;
+SELECT * FROM sancion_participante
+JOIN participante WHERE participante.ci = sancion_participante.ci;
+
+
 DROP TABLE login;
 
 INSERT INTO participante_programa( rol, nombre_programa, ci) VALUES ('Alumno','a','58898A')
@@ -175,6 +179,9 @@ CHANGE COLUMN `ci` `ci` VARCHAR(9);
 ALTER TABLE programa_academico
 CHANGE COLUMN `nombre_facultad` `nombre_facultad` VARCHAR(30);
 
+ALTER TABLE facultad
+CHANGE COLUMN `nombre` `nombre` VARCHAR(30);
+
 ALTER TABLE programa_academico
 CHANGE COLUMN `tipo` `tipo` VARCHAR(10);
 
@@ -206,7 +213,7 @@ VALUES ('P01A', 30, 'Grado', 'Ed1');
 INSERT INTO sala (nombre_sala, capacidad, tipo_sala, edificio)
 VALUES ('P01B', 30, 'Docente', 'Ed1');
 
-
+select * from reserva_participante
 SELECT l.correo, contrasena,pp.rol , pp.nombre_programa, pa.tipo FROM login l
 JOIN participante p ON l.correo = p.correo
 JOIN participante_programa pp ON p.ci = pp.ci
@@ -216,6 +223,9 @@ SELECT * FROM participante
 JOIN login ON participante.correo = login.correo
 
 
+
+ALTER TABLE participante
+ADD COLUMN rol VARCHAR(10) NOT NULL DEFAULT 'Alumno';
 SELECT p.ci, p.nombre, p.apellido, pp.nombre_programa
 FROM participante_programa pp
 JOIN participante p ON p.ci = pp.ci
@@ -225,3 +235,9 @@ WHERE pp.nombre_programa = 'a'
 SELECT edificio
 FROM sala
 WHERE nombre_sala = 'P002'
+
+
+INSERT INTO participante (ci, nombre, apellido, correo,  rol)
+VALUES ('000ADMIN', 'Admin', 'General', 'admin@admin.com', 'Admin');
+INSERT INTO login (correo, contrasena)
+VALUES ('admin@admin.com', 'admin123');

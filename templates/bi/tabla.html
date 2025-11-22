@@ -1,0 +1,20 @@
+<h1>{{ titulo }}</h1>
+
+<table border="1" cellpadding="6">
+    <tr>
+    {% for col in columnas %}
+        <th>{{ col }}</th>
+    {% endfor %}
+    </tr>
+
+    {% for row in datos %}
+        <tr>
+        {% for col in columnas %}
+            <td>{{ row[col] }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/bi"><button>Volver</button></a>

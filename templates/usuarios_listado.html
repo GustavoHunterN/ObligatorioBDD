@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+</head>
+<body>
+
+<h1>Gestión de Usuarios</h1>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    <ul>
+    {% for cat, msg in mensajes %}
+      <li><b>{{ cat }}:</b> {{ msg }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>CI</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for u in usuarios %}
+    <tr>
+        <td>{{ u.ci }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.apellido }}</td>
+        <td>{{ u.correo }}</td>
+        <td>{{ u.rol }}</td>
+        <td>
+            <a href="/usuarios/{{ u.ci }}/programas"><button>Ver programas</button></a>
+            <a href="/reservas?ci={{ u.ci }}"><button>Ver reservas</button></a>
+            <a href="/sanciones?ci={{ u.ci }}"><button>Ver sanciones</button></a>
+            <a href="/usuarios/editar/{{ u.ci }}"><button>Editar</button></a>
+
+            <form action="/usuarios/eliminar/{{ u.ci }}"
+                  method="POST"
+                  style="display:inline;"
+                  onsubmit="return confirm('¿Eliminar usuario?');">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/"><button>Volver</button></a>
+
+</body>
+</html>

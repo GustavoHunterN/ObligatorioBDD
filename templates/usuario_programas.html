@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Programas del usuario {{ ci }}</title>
+</head>
+
+<body>
+
+<h1>Programas del usuario {{ ci }}</h1>
+
+{% if programas %}
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Programa</th>
+        <th>Tipo</th>
+        <th>Facultad</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for p in programas %}
+    <tr>
+        <td>{{ p.nombre_programa }}</td>
+        <td>{{ p.tipo }}</td>
+        <td>{{ p.nombre_facultad }}</td>
+
+        <td>
+            <form action="/usuarios/{{ ci }}/programas/eliminar"
+                  method="POST"
+                  style="display:inline;">
+                <input type="hidden" name="programa" value="{{ p.nombre_programa }}">
+                <button type="submit"
+                        onclick="return confirm('¿Dar de baja al usuario de este programa?')">
+                    Dar de baja
+                </button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>Este usuario no está inscripto en ningún programa.</p>
+{% endif %}
+
+<br>
+<a href="/usuarios"><button>Volver</button></a>
+
+</body>
+</html>

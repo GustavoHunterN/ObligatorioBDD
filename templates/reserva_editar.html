@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Reserva</title>
+</head>
+<body>
+
+<h1>Editar Reserva</h1>
+<h2>Datos actuales de la reserva</h2>
+
+<ul>
+    <li><strong>Sala:</strong> {{ reserva.sala }} ({{ reserva.nombre_edificio }})</li>
+    <li><strong>Fecha actual:</strong> {{ reserva.fecha }}</li>
+    <li><strong>Turno actual:</strong>
+        {% for t in turnos %}
+            {% if t.id_turno == reserva.id_turno %}
+                {{ t.hora_inicio }} - {{ t.hora_final }}
+            {% endif %}
+        {% endfor %}
+    </li>
+    <li><strong>Estado:</strong> {{ reserva.estado }}</li>
+</ul>
+
+<hr>
+
+<form method="POST" action="/reservas/editar/{{ reserva.id_reserva }}">
+
+    <!-- FECHA -->
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" value="{{ reserva.fecha }}" required>
+    <br><br>
+
+    <!-- TURNO -->
+    <label for="id_turno">Turno:</label>
+    <select name="id_turno" id="id_turno" required>
+        {% for t in turnos %}
+            <option value="{{ t.id_turno }}"
+                {% if t.id_turno == reserva.id_turno %}selected{% endif %}>
+                {{ t.hora_inicio }} - {{ t.hora_final }}
+            </option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <!-- DATOS FIJOS QUE NO SE EDITAN PERO NECESITAMOS EN EL POST -->
+    <input type="hidden" name="sala" value="{{ reserva.sala }}">
+    <input type="hidden" name="estado" value="{{ reserva.estado }}">
+    <input type="hidden" name="nombre_edificio" value="{{ reserva.nombre_edificio }}">
+
+    <button type="submit">Guardar cambios</button>
+</form>
+
+<br>
+<a href="{{ url_for('mis_reservas') }}">Volver</a>
+
+</body>
+</html>

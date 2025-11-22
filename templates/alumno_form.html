@@ -19,10 +19,9 @@
 {% endwith %}
 
 <form action="{{ url_for('object_creator') }}" method="POST">
-    <input type="hidden" name="class_name" value="Participante">
-    <input type="hidden" name="type" value="alumno">
-    <label>CI (sin letra):</label><br>
-    <input type="text" name=ci_raw id="ci_raw" required><br><br>
+    <input type="hidden" name="class_name" value="Alumno">
+    <label>CI:</label><br>
+    <input type="text" name=ci id="ci" required><br><br>
 
 
 
@@ -31,12 +30,6 @@
 
     <label>Apellido:</label><br>
     <input type="text" name="apellido" required><br><br>
-
-    <label>Correo:</label><br>
-    <input type="email" name="correo" required><br><br>
-
-    <label>Contraseña:</label><br>
-    <input type="password" name="contrasena" required><br><br>
 
     <button type="submit">Crear Alumno</button>
 
