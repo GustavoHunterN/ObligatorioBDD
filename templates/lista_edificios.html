@@ -1,0 +1,35 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Listado de Edificios{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Listado de Edificios</h1>
+    <p>Visualiza todos los edificios registrados</p>
+</div>
+
+<div class="content-card">
+    {% if edificios %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Departamento</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for edificio in edificios %}
+            <tr>
+                <td>{{ edificio.nombre_edificio }}</td>
+                <td>{{ edificio.direccion }}</td>
+                <td>{{ edificio.departamento }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay edificios registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}

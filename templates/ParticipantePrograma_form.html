@@ -1,0 +1,58 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Inscribirse a Programa{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Programas Académicos</h1>
+    <p>Inscríbete en los programas académicos disponibles</p>
+</div>
+
+<div class="content-card">
+    {% if programas %}
+    <table>
+        <thead>
+            <tr>
+                <th>Programa</th>
+                <th>Facultad</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in programas %}
+            <tr>
+                <td><strong>{{ p.nombre_programa }}</strong></td>
+                <td>{{ p.nombre_facultad }}</td>
+                <td><span class="badge badge-info">{{ p.tipo }}</span></td>
+                <td>
+                    {% if p.nombre_programa in inscritos %}
+                        <span class="badge badge-success">Inscripto</span>
+                    {% else %}
+                        <span class="badge badge-warning">No inscripto</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if p.nombre_programa not in inscritos %}
+                    <form method="POST" action="{{ url_for('formularios.object_creator') }}" style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="class_name" value="ParticipantePrograma">
+                        <input type="hidden" name="programa" value="{{ p.nombre_programa }}">
+                        <input type="hidden" name="participante" value="{{ session['ci'] }}">
+                        <input type="hidden" name="rol" value="{{ session['rol'] }}">
+                        <button type="submit" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em;">
+                            Inscribirme
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay programas académicos disponibles.</p>
+    {% endif %}
+</div>
+{% endblock %}

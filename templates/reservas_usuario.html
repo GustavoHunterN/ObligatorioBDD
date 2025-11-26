@@ -1,0 +1,77 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Mis Reservas</h1>
+    <p>Gestiona todas tus reservas de salas</p>
+</div>
+
+<div class="content-card">
+    {% if reservas %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Sala</th>
+                <th>Edificio</th>
+                <th>Turno</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservas %}
+            <tr>
+                <td>{{ r.id_reserva }}</td>
+                <td>{{ r.fecha }}</td>
+                <td>{{ r.sala }}</td>
+                <td>{{ r.nombre_edificio }}</td>
+                <td>
+                    {{ "%02d"|format(r.hora_inicio.seconds//3600) }}:
+                    {{ "%02d"|format((r.hora_inicio.seconds % 3600)//60) }}
+                    -
+                    {{ "%02d"|format(r.hora_final.seconds//3600) }}:
+                    {{ "%02d"|format((r.hora_final.seconds % 3600)//60) }}
+                </td>
+                <td>
+                    <span class="badge {% if r.estado == 'Activa' %}badge-success{% else %}badge-danger{% endif %}">
+                        {{ r.estado }}
+                    </span>
+                </td>
+                <td>
+                    {% if r.estado == 'Cancelada' %}
+                        <span style="color: #999;">Cancelada</span>
+                    {% else %}
+                        <a href="{{ url_for('reservas.editar_reserva_form', id_reserva=r.id_reserva) }}" 
+                           class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em; margin-right: 5px;">
+                            Editar
+                        </a>
+                        <form action="{{ url_for('reservas.cancelar_reserva', id_reserva=r.id_reserva) }}" 
+                              method="POST" style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger" 
+                                    style="padding: 6px 12px; font-size: 0.85em;"
+                                    onclick="return confirm('¿Cancelar esta reserva?')">
+                                Cancelar
+                            </button>
+                        </form>
+                        {% if session.get("rol") == "Docente" and r.estado == "Activa" %}
+                            <a href="{{ url_for('reservas.pasar_lista', id_reserva=r.id_reserva) }}" 
+                               class="btn btn-success" style="padding: 6px 12px; font-size: 0.85em; margin-left: 5px;">
+                                Pasar Lista
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No tienes reservas registradas. <a href="{{ url_for('programas.mis_programas') }}" class="btn btn-primary">Crear primera reserva</a></p>
+    {% endif %}
+</div>
+{% endblock %}

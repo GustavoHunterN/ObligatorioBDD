@@ -1,0 +1,44 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Confirmar Reserva{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Confirmar reserva</h1>
+    <p>Revisa los detalles antes de confirmar</p>
+</div>
+
+<div class="content-card">
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+        <p><strong>Programa:</strong> {{ programa }}</p>
+        <p><strong>Sala:</strong> {{ sala }}</p>
+        <p><strong>Fecha:</strong> {{ fecha }}</p>
+        <p><strong>Turno:</strong> {{ id_turno }}</p>
+        <p><strong>Capacidad:</strong> {{ capacidad }} participantes</p>
+    </div>
+
+    <h2 style="margin-bottom: 15px;">Participantes incluidos:</h2>
+    <ul style="list-style: none; padding: 0;">
+        {% for p in participantes %}
+        <li style="padding: 12px; margin: 8px 0; background: #f8f9fa; border-radius: 5px; border-left: 3px solid #667eea;">
+            <strong>{{ p.nombre }} {{ p.apellido }}</strong> ({{ p.ci }})
+        </li>
+        {% endfor %}
+    </ul>
+
+    <form action="{{ url_for('formularios.object_creator') }}" method="POST" style="margin-top: 30px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="class_name" value="Reserva">
+        <input type="hidden" name="sala" value="{{ sala }}">
+        <input type="hidden" name="id_turno" value="{{ id_turno }}">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <input type="hidden" name="estado" value="Activa">
+        <input type="hidden" name="ci_sesion" value="{{ session['ci'] }}">
+        <input type="hidden" name="participantes_docente"
+               value="{{ participantes | map(attribute='ci') | join(',') }}">
+
+        <button type="submit" class="btn btn-primary">Confirmar reserva</button>
+        <a href="{{ url_for('reservas.form_reserva') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

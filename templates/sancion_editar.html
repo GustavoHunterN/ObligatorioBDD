@@ -1,0 +1,35 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Editar Sanción{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Editar sanción #{{ sancion.id_sancion }}</h1>
+    <p>Modifica la fecha final de la sanción</p>
+</div>
+
+<div class="content-card">
+    <p style="margin-bottom: 20px;">
+        <strong>Participante:</strong> {{ sancion.nombre }} {{ sancion.apellido }} ({{ sancion.ci }}) <br>
+        <strong>Fecha inicio:</strong> {{ sancion.fecha_inicio }}
+    </p>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.fecha_final.label }}
+            {{ form.fecha_final(class="form-control") }}
+            {% if form.fecha_final.errors %}
+                <div class="error-message">
+                    {% for error in form.fecha_final.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{{ url_for('sanciones.listar_sanciones') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Gestión de Salas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Gestión de Salas</h1>
+    <p>Administra todas las salas del sistema</p>
+</div>
+
+<div class="content-card">
+    <form method="GET" action="{{ url_for('salas.listar_salas') }}" style="margin-bottom: 20px;">
+        <div class="form-group" style="display: flex; gap: 10px; align-items: end;">
+            <div style="flex: 1;">
+                <label for="edificio">Filtrar por Edificio:</label>
+                <select name="edificio" id="edificio">
+                    <option value="">Todos</option>
+                    {% for e in edificios %}
+                        <option value="{{ e.nombre_edificio }}"
+                            {% if filtro_edificio == e.nombre_edificio %}selected{% endif %}>
+                            {{ e.nombre_edificio }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+    </form>
+
+    {% if salas %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre sala</th>
+                <th>Capacidad</th>
+                <th>Tipo</th>
+                <th>Edificio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in salas %}
+            <tr>
+                <td>{{ s.nombre_sala }}</td>
+                <td>{{ s.capacidad }}</td>
+                <td>{{ s.tipo_sala }}</td>
+                <td>{{ s.edificio }}</td>
+                <td>
+                    <a href="{{ url_for('salas.formulario_editar_sala', nombre_sala=s.nombre_sala) }}" 
+                       class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em; margin-right: 5px;">
+                        Editar
+                    </a>
+                    <form action="{{ url_for('salas.eliminar_sala', nombre_sala=s.nombre_sala) }}" 
+                          method="POST" style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger" 
+                                style="padding: 6px 12px; font-size: 0.85em;"
+                                onclick="return confirm('¿Eliminar sala y TODAS sus reservas?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay salas registradas.</p>
+    {% endif %}
+</div>
+{% endblock %}

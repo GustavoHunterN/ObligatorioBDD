@@ -1,0 +1,49 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Reservas del Usuario{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Reservas del usuario {{ ci }}</h1>
+    <p>Visualiza todas las reservas de este usuario</p>
+</div>
+
+<div class="content-card">
+    {% if reservas %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Sala</th>
+                <th>Edificio</th>
+                <th>Turno</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservas %}
+            <tr>
+                <td>{{ r.id_reserva }}</td>
+                <td>{{ r.fecha }}</td>
+                <td>{{ r.sala }}</td>
+                <td>{{ r.nombre_edificio }}</td>
+                <td>{{ r.hora_inicio }} - {{ r.hora_final }}</td>
+                <td>
+                    <span class="badge {% if r.estado == 'Activa' %}badge-success{% else %}badge-danger{% endif %}">
+                        {{ r.estado }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Este usuario no tiene reservas registradas.</p>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('usuarios.listar_usuarios') }}" class="btn btn-secondary">Volver a usuarios</a>
+    </div>
+</div>
+{% endblock %}

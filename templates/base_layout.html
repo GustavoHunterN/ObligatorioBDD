@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Reservas{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            flex: 1;
+        }
+        
+        .menu-section {
+            margin-bottom: 25px;
+        }
+        
+        .menu-section-title {
+            padding: 10px 20px;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            font-weight: 600;
+        }
+        
+        .menu-item {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: white;
+            padding-left: 25px;
+        }
+        
+        .menu-item.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            margin-top: auto;
+            padding: 15px 20px;
+            background: rgba(220, 53, 69, 0.8);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logout-btn a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(220, 53, 69, 1);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 1em;
+        }
+        
+        .content-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .content-card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        .badge-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏛️ Sistema de Reservas</h2>
+                {% if session.get('nombre') %}
+                <p>{{ session.get('nombre') }} {{ session.get('apellido') }}</p>
+                <p style="font-size: 0.75em; opacity: 0.8;">{{ session.get('rol') }}</p>
+                {% else %}
+                <p>No autenticado</p>
+                {% endif %}
+            </div>
+            
+            <nav class="sidebar-menu">
+                {% if session.get('rol') == 'Admin' %}
+                    <div class="menu-section">
+                        <div class="menu-section-title">Dashboard</div>
+                        <a href="{{ url_for('dashboard.dashboard_admin') }}" class="menu-item">👑 Panel Admin</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Gestión</div>
+                        <a href="{{ url_for('usuarios.listar_usuarios') }}" class="menu-item">👥 Usuarios</a>
+                        <a href="{{ url_for('salas.listar_salas') }}" class="menu-item">🏢 Salas</a>
+                        <a href="{{ url_for('edificios.listar_edificios') }}" class="menu-item">🏛️ Edificios</a>
+                        <a href="{{ url_for('sanciones.listar_sanciones') }}" class="menu-item">⚠️ Sanciones</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Registros</div>
+                        <a href="{{ url_for('formularios.form_alumno') }}" class="menu-item">➕ Alumno</a>
+                        <a href="{{ url_for('formularios.form_docente') }}" class="menu-item">➕ Docente</a>
+                        <a href="{{ url_for('formularios.form_edificio') }}" class="menu-item">➕ Edificio</a>
+                        <a href="{{ url_for('formularios.form_sala') }}" class="menu-item">➕ Sala</a>
+                        <a href="{{ url_for('formularios.form_facultad') }}" class="menu-item">➕ Facultad</a>
+                        <a href="{{ url_for('formularios.form_programa') }}" class="menu-item">➕ Programa</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Reportes</div>
+                        <a href="{{ url_for('bi.bi_menu') }}" class="menu-item">📊 Business Intelligence</a>
+                    </div>
+                    
+                {% elif session.get('rol') == 'Docente' %}
+                    <div class="menu-section">
+                        <div class="menu-section-title">Dashboard</div>
+                        <a href="{{ url_for('dashboard.dashboard_docente') }}" class="menu-item">👨‍🏫 Panel Docente</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Reservas</div>
+                        <a href="{{ url_for('programas.mis_programas') }}" class="menu-item">➕ Crear Reserva</a>
+                        <a href="{{ url_for('reservas.mis_reservas') }}" class="menu-item">📋 Mis Reservas</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Programas</div>
+                        <a href="{{ url_for('programas.mis_programas') }}" class="menu-item">📚 Mis Programas</a>
+                    </div>
+                    
+                {% elif session.get('rol') == 'Alumno' %}
+                    <div class="menu-section">
+                        <div class="menu-section-title">Dashboard</div>
+                        <a href="{{ url_for('dashboard.dashboard_alumno') }}" class="menu-item">👨‍🎓 Panel Alumno</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Reservas</div>
+                        <a href="{{ url_for('programas.mis_programas') }}" class="menu-item">➕ Crear Reserva</a>
+                        <a href="{{ url_for('reservas.mis_reservas') }}" class="menu-item">📋 Mis Reservas</a>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <div class="menu-section-title">Programas</div>
+                        <a href="{{ url_for('programas.mis_programas') }}" class="menu-item">📚 Mis Programas</a>
+                        <a href="{{ url_for('programas.form_participanteprograma') }}" class="menu-item">✏️ Inscribirse</a>
+                    </div>
+                    
+                {% else %}
+                    <div class="menu-section">
+                        <div class="menu-section-title">Acceso</div>
+                        <a href="{{ url_for('dashboard.index') }}" class="menu-item">🏠 Inicio</a>
+                        <a href="{{ url_for('auth_bp.login_alumno_form') }}" class="menu-item">👨‍🎓 Login Alumno</a>
+                        <a href="{{ url_for('auth_bp.login_docente_form') }}" class="menu-item">👨‍🏫 Login Docente</a>
+                    </div>
+                {% endif %}
+            </nav>
+            
+            {% if session.get('ci') %}
+            <div class="logout-btn">
+                <a href="{{ url_for('auth_bp.logout') }}">
+                    <span>🚪</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+            {% endif %}
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            {% include '_flash_messages.html' %}
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

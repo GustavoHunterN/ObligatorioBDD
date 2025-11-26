@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Registro de Entidades</title></head>
+<body>
+  <h1>Panel de Registro</h1>
+{% include '_flash_messages.html' %}
+  <ul>
+    <li><a href="{{ url_for('formularios.form_edificio') }}">Registrar Edificio</a></li>
+    <li><a href="{{ url_for('formularios.form_facultad') }}">Registrar Facultad</a></li>
+    <li><a href="{{ url_for('formularios.form_programa') }}">Registrar Programa</a></li>
+    <li><a href="{{ url_for('formularios.form_sala') }}">Registrar Sala</a></li>
+    <li><a href="{{ url_for('edificios.listar_edificios') }}">Ver Edificios</a></li>
+    <li><a href="{{ url_for('salas.listar_salas') }}">Editor Salas</a></li>
+    <li><a href="{{ url_for('sanciones.listar_sanciones') }}">Editor Sanciones</a></li>
+    <li><a href="{{ url_for('reservas.mis_reservas') }}">Mis Reservas</a></li>
+    <li><a href="{{ url_for('programas.mis_programas') }}">Mis Programas</a></li>
+    <li><a href="{{ url_for('programas.form_participanteprograma') }}">Inscripcion a programas</a></li>
+    <li><a href="{{ url_for('reservas.form_reserva') }}">Crear Reserva</a></li>
+    <li><a href="{{ url_for('formularios.form_alumno') }}">Registrar Alumno</a></li>
+    <li><a href="{{ url_for('formularios.form_docente') }}">Registrar Docente</a></li>
+    <li><a href="{{ url_for('bi.bi_menu') }}">Menu BI</a></li>
+    <li><a href="{{ url_for('usuarios.listar_usuarios') }}">Listado Usuarios</a></li>
+    <li><a href="{{ url_for('auth_bp.login_alumno_form') }}">Login Alumno</a></li>
+    <li><a href="{{ url_for('auth_bp.login_docente_form') }}">Login Docente</a></li>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Seleccionar Participantes{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Seleccionar participantes</h1>
+    <p>Elige los participantes para esta reserva</p>
+</div>
+
+<div class="content-card">
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <p><strong>Programa:</strong> {{ programa }}</p>
+        <p><strong>Sala:</strong> {{ sala }}</p>
+        <p><strong>Capacidad máxima:</strong> {{ capacidad }} participantes</p>
+    </div>
+
+    <form action="{{ url_for('formularios.object_creator') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="class_name" value="Reserva">
+        <input type="hidden" name="sala" value="{{ sala }}">
+        <input type="hidden" name="id_turno" value="{{ id_turno }}">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <input type="hidden" name="estado" value="Activa">
+        <input type="hidden" name="ci_sesion" value="{{ session['ci'] }}">
+
+        <h2 style="margin-bottom: 15px;">Participantes disponibles:</h2>
+        <div id="participantes-list" style="max-height: 400px; overflow-y: auto;">
+            {% for p in participantes %}
+            <div style="padding: 12px; margin: 8px 0; background: #f8f9fa; border-radius: 5px; display: flex; align-items: center;">
+                <input type="checkbox" 
+                       name="participantes[]" 
+                       value="{{ p.ci }}"
+                       id="participante_{{ p.ci }}"
+                       class="participante-checkbox"
+                       style="width: 20px; height: 20px; margin-right: 15px;">
+                <label for="participante_{{ p.ci }}" style="margin: 0; flex: 1; cursor: pointer;">
+                    <strong>{{ p.nombre }} {{ p.apellido }}</strong> ({{ p.ci }})
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 5px;">
+            <p><strong>Seleccionados: <span id="count">0</span> / {{ capacidad }}</strong></p>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary">Confirmar reserva</button>
+            <a href="{{ url_for('reservas.form_reserva') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+const capacidad = {{ capacidad }};
+const checks = document.querySelectorAll(".participante-checkbox");
+const countSpan = document.getElementById("count");
+
+function updateCount() {
+    const selected = [...checks].filter(x => x.checked).length;
+    countSpan.textContent = selected;
+    
+    if (selected > capacidad) {
+        countSpan.style.color = '#dc3545';
+    } else {
+        countSpan.style.color = '#28a745';
+    }
+}
+
+checks.forEach(c => {
+    c.addEventListener("change", () => {
+        const selected = [...checks].filter(x => x.checked).length;
+        if (selected > capacidad) {
+            alert("Capacidad máxima alcanzada (" + capacidad + " participantes)");
+            c.checked = false;
+        }
+        updateCount();
+    });
+});
+
+updateCount();
+</script>
+{% endblock %}

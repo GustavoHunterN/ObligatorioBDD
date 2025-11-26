@@ -1,0 +1,112 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Crear Reserva{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Crear reserva — Fecha {{ fecha }}</h1>
+    <p>Programa: <strong>{{ session.get('programa_reserva') }}</strong> | Selecciona una sala y turno disponible</p>
+    <div style="margin-top: 10px;">
+        <a href="{{ url_for('programas.mis_programas') }}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9em;">
+            ← Cambiar programa
+        </a>
+    </div>
+</div>
+
+<!-- FORMULARIO DE FILTROS -->
+<div class="content-card">
+    <h2>🔍 Filtros de Búsqueda</h2>
+    <form method="GET" action="{{ url_for('reservas.form_reserva') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+        <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" name="fecha" id="fecha" value="{{ fecha }}" min="{{ fecha_hoy }}">
+        </div>
+
+        <div class="form-group">
+            <label for="edificio">Edificio:</label>
+            <select name="edificio" id="edificio">
+                <option value="">Todos</option>
+                {% for e in edificios %}
+                    <option value="{{ e.nombre_edificio }}"
+                       {% if filtro_edificio == e.nombre_edificio %}selected{% endif %}>
+                       {{ e.nombre_edificio }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="id_turno">Turno:</label>
+            <select name="id_turno" id="id_turno">
+                <option value="">Todos</option>
+                {% for t in todos_los_turnos %}
+                 <option value="{{ t.id_turno }}"
+                    {% if filtro_turno == (t.id_turno | string) %}selected{% endif %}>
+                    {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
+                    {{ "%02d"|format((t.hora_inicio.seconds % 3600)//60) }}
+                    -
+                    {{ "%02d"|format(t.hora_final.seconds//3600) }}:
+                    {{ "%02d"|format((t.hora_final.seconds % 3600)//60) }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Aplicar filtros</button>
+    </form>
+</div>
+
+<div class="content-card">
+    <h2>🏢 Salas y Turnos Disponibles</h2>
+    {% if salas %}
+    <table>
+        <thead>
+            <tr>
+                <th>Edificio</th>
+                <th>Sala</th>
+                <th>Tipo</th>
+                <th>Turno</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in salas %}
+                {% for t in turnos %}
+                    <tr>
+                        <td>{{ s.edificio }}</td>
+                        <td>{{ s.nombre_sala }}</td>
+                        <td><span class="badge badge-info">{{ s.tipo_sala }}</span></td>
+                        <td>
+                          {{ "%02d"|format(t.hora_inicio.seconds//3600) }}:
+                          {{ "%02d"|format((t.hora_inicio.seconds % 3600)//60) }}
+                          -
+                          {{ "%02d"|format(t.hora_final.seconds//3600) }}:
+                          {{ "%02d"|format((t.hora_final.seconds % 3600)//60) }}
+                        </td>
+                        <td>
+                            {% set ocupado = (t.id_turno, s.nombre_sala, s.edificio) in reservados %}
+                            {% if ocupado %}
+                                <span class="badge badge-danger">Reservado</span>
+                            {% else %}
+                                <span class="badge badge-success">Disponible</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not ocupado %}
+                            <a href="{{ url_for('reservas.seleccionar_participantes', sala=s.nombre_sala, turno=t.id_turno, fecha=fecha) }}" 
+                               class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em;">
+                                Reservar
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay salas disponibles con los filtros seleccionados.</p>
+    {% endif %}
+</div>
+{% endblock %}

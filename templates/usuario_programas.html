@@ -1,0 +1,52 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Programas del Usuario{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Programas del usuario {{ ci }}</h1>
+    <p>Gestiona los programas académicos de este usuario</p>
+</div>
+
+<div class="content-card">
+    {% if programas %}
+    <table>
+        <thead>
+            <tr>
+                <th>Programa</th>
+                <th>Tipo</th>
+                <th>Facultad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in programas %}
+            <tr>
+                <td><strong>{{ p.nombre_programa }}</strong></td>
+                <td><span class="badge badge-info">{{ p.tipo }}</span></td>
+                <td>{{ p.nombre_facultad }}</td>
+                <td>
+                    <form action="{{ url_for('usuarios.eliminar_usuario_de_programa', ci=ci) }}"
+                          method="POST" style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="programa" value="{{ p.nombre_programa }}">
+                        <button type="submit" class="btn btn-danger" 
+                                style="padding: 6px 12px; font-size: 0.85em;"
+                                onclick="return confirm('¿Dar de baja al usuario de este programa?')">
+                            Dar de baja
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Este usuario no está inscripto en ningún programa.</p>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('usuarios.listar_usuarios') }}" class="btn btn-secondary">Volver a usuarios</a>
+    </div>
+</div>
+{% endblock %}

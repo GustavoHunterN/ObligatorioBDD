@@ -1,0 +1,49 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Business Intelligence{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Módulo BI – Reportes</h1>
+    <p>Análisis y estadísticas del sistema</p>
+</div>
+
+<div class="content-card">
+    <h2>📊 Reportes Disponibles</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+        <a href="{{ url_for('bi.bi_salas_mas_reservadas') }}" class="btn btn-primary">
+            🏢 Salas más reservadas
+        </a>
+        <a href="{{ url_for('bi.bi_turnos_mas_demandados') }}" class="btn btn-primary">
+            ⏰ Turnos más demandados
+        </a>
+        <a href="{{ url_for('bi.bi_promedio_participantes_sala') }}" class="btn btn-primary">
+            👥 Promedio participantes por sala
+        </a>
+        <a href="{{ url_for('bi.bi_reservas_por_carrera_facultad') }}" class="btn btn-primary">
+            📚 Reservas por carrera y facultad
+        </a>
+        <a href="{{ url_for('bi.bi_ocupacion_por_edificio') }}" class="btn btn-primary">
+            🏛️ Ocupación por edificio
+        </a>
+        <a href="{{ url_for('bi.bi_reservas_asistencias_por_rol') }}" class="btn btn-primary">
+            📊 Reservas/asistencias por rol
+        </a>
+        <a href="{{ url_for('bi.bi_sanciones_por_rol') }}" class="btn btn-primary">
+            ⚠️ Sanciones por rol
+        </a>
+        <a href="{{ url_for('bi.bi_porcentaje_uso') }}" class="btn btn-primary">
+            📈 Porcentaje de uso
+        </a>
+        <a href="{{ url_for('bi.bi_top_usuarios') }}" class="btn btn-primary">
+            🏆 Top usuarios
+        </a>
+        <a href="{{ url_for('bi.bi_edificios_por_programa') }}" class="btn btn-primary">
+            🏗️ Edificios por programa
+        </a>
+        <a href="{{ url_for('bi.bi_capacidad_promedio') }}" class="btn btn-primary">
+            📏 Capacidad promedio
+        </a>
+    </div>
+</div>
+{% endblock %}

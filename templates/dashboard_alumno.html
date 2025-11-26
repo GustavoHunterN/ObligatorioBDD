@@ -1,0 +1,114 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Dashboard - Alumno{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👋 Bienvenido, {{ nombre }} {{ apellido }}</h1>
+    <p>Panel de Control - Alumno</p>
+</div>
+
+{% if tiene_sancion %}
+<div class="content-card" style="border-left: 4px solid #ffc107; background-color: #fff3cd;">
+    <strong>⚠️ Advertencia:</strong> Tienes una sanción activa. No puedes realizar nuevas reservas hasta que la sanción expire.
+</div>
+{% endif %}
+
+<!-- Estadísticas -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ total_reservas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Reservas Totales</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ reservas_activas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Reservas Activas</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ programas|length }}</h3>
+        <p style="color: #666; margin-top: 10px;">Programas Inscritos</p>
+    </div>
+</div>
+
+<!-- Acciones Rápidas -->
+<div class="content-card">
+    <h2>🚀 Acciones Rápidas</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="{{ url_for('programas.mis_programas') }}" class="btn btn-success">
+            ➕ Crear Nueva Reserva
+        </a>
+        <a href="{{ url_for('reservas.mis_reservas') }}" class="btn btn-primary">
+            📋 Ver Todas mis Reservas
+        </a>
+        <a href="{{ url_for('programas.mis_programas') }}" class="btn btn-primary">
+            📚 Mis Programas
+        </a>
+        <a href="{{ url_for('programas.form_participanteprograma') }}" class="btn btn-secondary">
+            ✏️ Inscribirse a Programa
+        </a>
+    </div>
+</div>
+
+<!-- Reservas Recientes -->
+<div class="content-card">
+    <h2>📅 Reservas Recientes</h2>
+    {% if reservas_recientes %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Sala</th>
+                <th>Edificio</th>
+                <th>Turno</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservas_recientes %}
+            <tr>
+                <td>{{ r.id_reserva }}</td>
+                <td>{{ r.fecha }}</td>
+                <td>{{ r.sala }}</td>
+                <td>{{ r.nombre_edificio }}</td>
+                <td>
+                    {{ "%02d"|format(r.hora_inicio.seconds//3600) }}:
+                    {{ "%02d"|format((r.hora_inicio.seconds % 3600)//60) }}
+                    -
+                    {{ "%02d"|format(r.hora_final.seconds//3600) }}:
+                    {{ "%02d"|format((r.hora_final.seconds % 3600)//60) }}
+                </td>
+                <td>
+                    <span class="badge {% if r.estado == 'Activa' %}badge-success{% else %}badge-danger{% endif %}">
+                        {{ r.estado }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No tienes reservas aún. <a href="{{ url_for('programas.mis_programas') }}" class="btn btn-success">Crea tu primera reserva</a></p>
+    {% endif %}
+</div>
+
+<!-- Programas -->
+<div class="content-card">
+    <h2>📚 Mis Programas</h2>
+    {% if programas %}
+    <ul style="list-style: none; padding: 0;">
+        {% for p in programas %}
+        <li style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 3px solid #667eea;">
+            <strong>{{ p.nombre_programa }}</strong> - Tipo: {{ p.tipo }}
+            <a href="{{ url_for('programas.reservar_para_programa', programa=p.nombre_programa, tipo=p.tipo) }}" 
+               style="float: right; color: #667eea; text-decoration: none; font-weight: 600;">
+                Reservar para este programa →
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No estás inscrito en ningún programa. <a href="{{ url_for('programas.form_participanteprograma') }}" class="btn btn-primary">Inscríbete aquí</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Listado de Sanciones{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Listado de sanciones</h1>
+    <p>Gestiona las sanciones del sistema</p>
+</div>
+
+<div class="content-card">
+    {% if sanciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>CI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Inicio</th>
+                <th>Final</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in sanciones %}
+            <tr>
+                <td>{{ s.id_sancion }}</td>
+                <td>{{ s.ci }}</td>
+                <td>{{ s.nombre }}</td>
+                <td>{{ s.apellido }}</td>
+                <td>{{ s.fecha_inicio }}</td>
+                <td>{{ s.fecha_final }}</td>
+                <td>
+                    <a href="{{ url_for('sanciones.editar_sancion_form', id_sancion=s.id_sancion) }}" 
+                       class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em; margin-right: 5px;">
+                        Editar
+                    </a>
+                    <form action="{{ url_for('sanciones.eliminar_sancion', id_sancion=s.id_sancion) }}" 
+                          method="POST" style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger" 
+                                style="padding: 6px 12px; font-size: 0.85em;"
+                                onclick="return confirm('¿Eliminar sanción?')">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay sanciones registradas.</p>
+    {% endif %}
+</div>
+{% endblock %}

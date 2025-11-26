@@ -1,0 +1,64 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Gestión de Usuarios</h1>
+    <p>Administra todos los usuarios del sistema</p>
+</div>
+
+<div class="content-card">
+    {% if usuarios %}
+    <table>
+        <thead>
+            <tr>
+                <th>CI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{ u.ci }}</td>
+                <td>{{ u.nombre }}</td>
+                <td>{{ u.apellido }}</td>
+                <td>{{ u.correo }}</td>
+                <td><span class="badge badge-info">{{ u.rol }}</span></td>
+                <td>
+                    <a href="{{ url_for('usuarios.programas_de_usuario', ci=u.ci) }}" 
+                       class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em; margin-right: 5px;">
+                        Programas
+                    </a>
+                    <a href="{{ url_for('reservas.reservas_por_usuario', ci=u.ci) }}" 
+                       class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em; margin-right: 5px;">
+                        Reservas
+                    </a>
+                    <a href="{{ url_for('usuarios.editar_usuario_form', ci=u.ci) }}" 
+                       class="btn btn-success" style="padding: 6px 12px; font-size: 0.85em; margin-right: 5px;">
+                        Editar
+                    </a>
+                    <form action="{{ url_for('usuarios.eliminar_usuario', ci=u.ci) }}"
+                          method="POST"
+                          style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger" 
+                                style="padding: 6px 12px; font-size: 0.85em;"
+                                onclick="return confirm('¿Eliminar usuario?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay usuarios registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}

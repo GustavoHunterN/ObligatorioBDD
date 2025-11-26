@@ -1,0 +1,35 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Pase de Lista{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Pase de lista – Reserva {{ reserva.id_reserva }}</h1>
+    <p>{{ reserva.fecha }} – Sala {{ reserva.sala }} ({{ reserva.nombre_edificio }})</p>
+</div>
+
+<div class="content-card">
+    <form action="{{ url_for('reservas.guardar_asistencia', id_reserva=reserva.id_reserva) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h2 style="margin-bottom: 20px;">Marcar asistencia de participantes:</h2>
+        
+        {% for p in participantes %}
+        <div style="padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 5px; display: flex; align-items: center;">
+            <input type="checkbox"
+                   name="asistencia_{{ p.ci }}"
+                   id="asistencia_{{ p.ci }}"
+                   style="width: 20px; height: 20px; margin-right: 15px;"
+                   {% if p.asistencia == 1 %}checked{% endif %}>
+            <label for="asistencia_{{ p.ci }}" style="margin: 0; flex: 1; cursor: pointer;">
+                <strong>{{ p.nombre }} {{ p.apellido }}</strong> – {{ p.ci }}
+            </label>
+        </div>
+        {% endfor %}
+
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary">Guardar asistencia</button>
+            <a href="{{ url_for('reservas.mis_reservas') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

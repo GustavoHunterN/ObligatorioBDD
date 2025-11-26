@@ -1,0 +1,47 @@
+{# Reusable flash message component with better styling #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="margin-bottom: 20px;">
+      {% for category, message in messages %}
+        <div style="
+          padding: 15px 20px;
+          margin: 10px 0;
+          border-radius: 8px;
+          border-left: 4px solid;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          {% if category == 'success' or category == 'ok' %}
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+          {% elif category == 'error' or category == 'login_error' %}
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+          {% elif category == 'warning' %}
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+          {% else %}
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+          {% endif %}
+        ">
+          <strong style="font-size: 1.1em;">
+            {% if category == 'success' or category == 'ok' %}
+              ✓ Éxito:
+            {% elif category == 'error' or category == 'login_error' %}
+              ✗ Error:
+            {% elif category == 'warning' %}
+              ⚠ Advertencia:
+            {% else %}
+              ℹ Información:
+            {% endif %}
+          </strong>
+          <span style="margin-left: 10px;">{{ message }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+

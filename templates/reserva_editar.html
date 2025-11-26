@@ -1,0 +1,74 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Editar Reserva{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Editar Reserva</h1>
+    <p>Modifica los datos de tu reserva</p>
+</div>
+
+<div class="content-card">
+    <h2>Datos actuales de la reserva</h2>
+    <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+        <li style="padding: 10px; background: #f8f9fa; margin: 5px 0; border-radius: 5px;">
+            <strong>Sala:</strong> {{ reserva.sala }} ({{ reserva.nombre_edificio }})
+        </li>
+        <li style="padding: 10px; background: #f8f9fa; margin: 5px 0; border-radius: 5px;">
+            <strong>Fecha actual:</strong> {{ reserva.fecha }}
+        </li>
+        <li style="padding: 10px; background: #f8f9fa; margin: 5px 0; border-radius: 5px;">
+            <strong>Turno actual:</strong>
+            {% for t in turnos %}
+                {% if t.id_turno == reserva.id_turno %}
+                    {{ t.hora_inicio }} - {{ t.hora_final }}
+                {% endif %}
+            {% endfor %}
+        </li>
+        <li style="padding: 10px; background: #f8f9fa; margin: 5px 0; border-radius: 5px;">
+            <strong>Estado:</strong> 
+            <span class="badge {% if reserva.estado == 'Activa' %}badge-success{% else %}badge-danger{% endif %}">
+                {{ reserva.estado }}
+            </span>
+        </li>
+    </ul>
+</div>
+
+<div class="content-card">
+    <form method="POST" action="{{ url_for('reservas.editar_reserva', id_reserva=reserva.id_reserva) }}">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.fecha.label }}
+            {{ form.fecha(class="form-control") }}
+            {% if form.fecha.errors %}
+                <div class="error-message">
+                    {% for error in form.fecha.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.id_turno.label }}
+            {{ form.id_turno(class="form-control") }}
+            {% if form.id_turno.errors %}
+                <div class="error-message">
+                    {% for error in form.id_turno.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        {# Campos ocultos: sala, edificio y estado no son editables #}
+        <input type="hidden" name="sala" value="{{ form.sala.data }}">
+        <input type="hidden" name="nombre_edificio" value="{{ form.nombre_edificio.data }}">
+        <input type="hidden" name="estado" value="{{ form.estado.data }}">
+
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="{{ url_for('reservas.mis_reservas') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

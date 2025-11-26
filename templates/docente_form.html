@@ -1,0 +1,67 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Registrar Docente{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Registrar Docente</h1>
+    <p>Complete el formulario para registrar un nuevo docente</p>
+</div>
+
+<div class="content-card">
+    <form action="{{ url_for('formularios.object_creator') }}" method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.ci.label }}
+            {{ form.ci(class="form-control") }}
+            {% if form.ci.errors %}
+                <div class="error-message">
+                    {% for error in form.ci.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.nombre.label }}
+            {{ form.nombre(class="form-control") }}
+            {% if form.nombre.errors %}
+                <div class="error-message">
+                    {% for error in form.nombre.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.apellido.label }}
+            {{ form.apellido(class="form-control") }}
+            {% if form.apellido.errors %}
+                <div class="error-message">
+                    {% for error in form.apellido.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.contrasena.label }}
+            {{ form.contrasena(class="form-control") }}
+            {% if form.contrasena.errors %}
+                <div class="error-message">
+                    {% for error in form.contrasena.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Crear Docente</button>
+        <a href="{{ url_for('dashboard.dashboard_admin') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

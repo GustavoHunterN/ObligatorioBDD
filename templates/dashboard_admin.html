@@ -1,0 +1,154 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Dashboard - Administrador{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👑 Bienvenido, {{ nombre }} {{ apellido }}</h1>
+    <p>Panel de Administración</p>
+</div>
+
+<!-- Estadísticas Generales -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ total_usuarios }}</h3>
+        <p style="color: #666; margin-top: 10px;">Usuarios Totales</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ total_reservas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Reservas Totales</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ reservas_activas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Reservas Activas</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ total_salas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Salas Disponibles</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ sanciones_activas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Sanciones Activas</p>
+    </div>
+    <div class="content-card" style="text-align: center;">
+        <h3 style="font-size: 2.5em; color: #667eea; margin: 0;">{{ total_programas }}</h3>
+        <p style="color: #666; margin-top: 10px;">Programas Académicos</p>
+    </div>
+</div>
+
+<!-- Acciones Rápidas -->
+<div class="content-card">
+    <h2>🚀 Gestión Rápida</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="{{ url_for('usuarios.listar_usuarios') }}" class="btn btn-primary">
+            👥 Gestión de Usuarios
+        </a>
+        <a href="{{ url_for('salas.listar_salas') }}" class="btn btn-primary">
+            🏢 Gestión de Salas
+        </a>
+        <a href="{{ url_for('sanciones.listar_sanciones') }}" class="btn btn-primary">
+            ⚠️ Gestión de Sanciones
+        </a>
+        <a href="{{ url_for('edificios.listar_edificios') }}" class="btn btn-primary">
+            🏛️ Gestión de Edificios
+        </a>
+        <a href="{{ url_for('bi.bi_menu') }}" class="btn btn-success">
+            📊 Reportes BI
+        </a>
+    </div>
+</div>
+
+<!-- Registros -->
+<div class="content-card">
+    <h2>➕ Registrar Nuevos Elementos</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="{{ url_for('formularios.form_alumno') }}" class="btn btn-secondary">
+            ➕ Registrar Alumno
+        </a>
+        <a href="{{ url_for('formularios.form_docente') }}" class="btn btn-secondary">
+            ➕ Registrar Docente
+        </a>
+        <a href="{{ url_for('formularios.form_edificio') }}" class="btn btn-secondary">
+            ➕ Registrar Edificio
+        </a>
+        <a href="{{ url_for('formularios.form_sala') }}" class="btn btn-secondary">
+            ➕ Registrar Sala
+        </a>
+        <a href="{{ url_for('formularios.form_facultad') }}" class="btn btn-secondary">
+            ➕ Registrar Facultad
+        </a>
+        <a href="{{ url_for('formularios.form_programa') }}" class="btn btn-secondary">
+            ➕ Registrar Programa
+        </a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <!-- Usuarios Recientes -->
+    <div class="content-card">
+        <h2>👥 Usuarios Recientes</h2>
+        {% if usuarios_recientes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>CI</th>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios_recientes %}
+                <tr>
+                    <td>{{ u.ci }}</td>
+                    <td>{{ u.nombre }} {{ u.apellido }}</td>
+                    <td><span class="badge badge-info">{{ u.rol }}</span></td>
+                    <td>
+                        <a href="{{ url_for('usuarios.editar_usuario_form', ci=u.ci) }}" 
+                           class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em;">
+                            Editar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay usuarios registrados.</p>
+        {% endif %}
+    </div>
+
+    <!-- Reservas Recientes -->
+    <div class="content-card">
+        <h2>📅 Reservas Recientes</h2>
+        {% if reservas_recientes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Sala</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservas_recientes %}
+                <tr>
+                    <td>{{ r.id_reserva }}</td>
+                    <td>{{ r.fecha }}</td>
+                    <td>{{ r.sala }}</td>
+                    <td>
+                        <span class="badge {% if r.estado == 'Activa' %}badge-success{% else %}badge-danger{% endif %}">
+                            {{ r.estado }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay reservas registradas.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

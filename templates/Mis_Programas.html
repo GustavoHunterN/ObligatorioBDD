@@ -1,0 +1,42 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Mis Programas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Mis Programas</h1>
+    <p>Programas académicos en los que estás inscrito</p>
+</div>
+
+<div class="content-card">
+    {% if programas %}
+    <table>
+        <thead>
+            <tr>
+                <th>Programa</th>
+                <th>Tipo</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in programas %}
+            <tr>
+                <td><strong>{{ p.nombre_programa }}</strong></td>
+                <td><span class="badge badge-info">{{ p.tipo }}</span></td>
+                <td>
+                    <a href="{{ url_for('programas.reservar_para_programa', programa=p.nombre_programa, tipo=p.tipo) }}" 
+                       class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85em;">
+                        Reservar sala
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No estás inscripto en ningún programa. 
+       <a href="{{ url_for('programas.form_participanteprograma') }}" class="btn btn-primary">Inscribirse a un programa</a>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

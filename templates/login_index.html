@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reservas - Inicio de Sesión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .login-container h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .login-container p {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 30px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-btn.alumno {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-btn.docente {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        }
+        
+        .login-btn.docente:hover {
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+        }
+        
+        .login-btn.admin {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+        
+        .login-btn.admin:hover {
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+        
+        .divider {
+            margin: 30px 0;
+            text-align: center;
+            color: #999;
+            position: relative;
+            font-weight: 600;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 35%;
+            height: 2px;
+            background: #ddd;
+        }
+        
+        .divider::before {
+            left: 0;
+        }
+        
+        .divider::after {
+            right: 0;
+        }
+        
+        .info-text {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #999;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>🏛️ Sistema de Reservas</h1>
+        <p>Selecciona tu tipo de usuario para iniciar sesión</p>
+
+        {% include '_flash_messages.html' %}
+
+        <div class="login-options">
+            <a href="{{ url_for('auth_bp.login_alumno_form') }}" class="login-btn alumno">
+                👨‍🎓 Iniciar Sesión como Alumno
+            </a>
+            <a href="{{ url_for('auth_bp.login_docente_form') }}" class="login-btn docente">
+                👨‍🏫 Iniciar Sesión como Docente
+            </a>
+        </div>
+
+        <div class="divider">o</div>
+
+        <a href="{{ url_for('auth_bp.login_alumno_form') }}" class="login-btn admin">
+            👑 Acceso Administrador
+        </a>
+
+        <p class="info-text">
+            Los administradores pueden iniciar sesión desde cualquier opción de login<br><br>
+            <strong>Primera vez?</strong> Ejecuta <code>python setup_admin.py</code> para crear la cuenta de administrador inicial.
+        </p>
+    </div>
+</body>
+</html>
+
